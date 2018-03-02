@@ -117,4 +117,3 @@ for ku=1:Nk
 
     end %; phiv
   end %; ku
-
