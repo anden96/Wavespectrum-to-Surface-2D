@@ -214,6 +214,8 @@ kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT]
 kxmath = circshift(kxFFT,Nx/2-1);
 kymath = circshift(kyFFT,Ny/2-1);
 
+
+
 % ;----- Compute the 1S frequencies
 kx1S = [0.0, kxpos];
 ky1S = kymath;

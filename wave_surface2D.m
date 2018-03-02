@@ -202,7 +202,7 @@ xFFT = 1:((Nx-1)/2); % = [1,2,...,(Nx-1)/2]
 yFFT = 1:((Ny-1)/2);
 kxFFT = (2.0*pi/Lx)*[0.0, xFFT, Nx/2.0 ,-Nx/2.0+xFFT]; % in rad/m
 kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT]
-%To plot the kyFFT and kxFFT - Looks OK but would not 
+%To plot the kyFFT and kxFFT - Looks OK 
 % figure(1)
 % subplot(1,2,1)
 % plot(kyFFT)
@@ -213,6 +213,12 @@ kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT]
 % Worth controlling if any differences with SHIFT and circshift
 kxmath = circshift(kxFFT,Nx/2-1);
 kymath = circshift(kyFFT,Ny/2-1);
+%To plot the kymath and kxmath - Looks OK  
+% figure(2)
+%  subplot(1,2,1)
+%  plot(kymath)
+%  subplot(1,2,2)
+%  plot(kxmath) 
 
 % ;----- Compute the 1S frequencies
 kx1S = [0.0, kxpos];
