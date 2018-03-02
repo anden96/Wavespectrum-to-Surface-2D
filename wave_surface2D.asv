@@ -310,10 +310,10 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 % 
 % ; ***** CONTOUR THE ONE-SIDED, 2D VARIANCE SPECTRUM; UPPER LEFT PANEL *****  
 % 
-Psi1splot = Psi1s(Nx/2+1:Nx,Ny/2+1:Ny) %; temp array for plotting the right half of the symmetrical variance spectrum
+Psi1splot = Psi1s(Nx/2+1,Nx/2+1:Nx) %; temp array for plotting the right half of the symmetrical variance spectrum
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
 
-contour(Nx/2+1:Ny,Ny/2+1:Ny,real(Psi1splot))
+contour(1:Nx/2,1:Ny/2,real(Psi1splot))
 
 % ; ***** GENERATE A RANDOM HERMITIAN zhat(kx,ky) ***** 
 % 

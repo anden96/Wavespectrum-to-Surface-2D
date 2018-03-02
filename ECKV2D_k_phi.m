@@ -1,4 +1,4 @@
-function E2D=ECKV2D_k_phi(kpos,phirad,U10)
+ function E2D=ECKV2D_k_phi(kpos,phirad,U10)
 
 % ; Given positive angular wavenumbers kpos in rad/m and angle phi in radians, and wind speed U10 in m/s, 
 % ; this routine returns the 2D directional gravity-capillary energy spectrum Psi(k,phi) of 
@@ -117,4 +117,6 @@ for ku=1:Nk
 
     end %; phiv
   end %; ku
+  
+  
 
