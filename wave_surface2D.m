@@ -301,7 +301,7 @@ Psi1s=zeros(Nx,Ny);%holds all kxmath and kymath frequencies
 for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2
     for iky = Ny/2:Ny %non-negative ky values Ny/2 - Ny
           k = sqrt(kx1S(ikx)*kx1S(ikx) + ky1S(iky)*ky1S(iky))
-          phirad=atan(ky1S(iky)+i*kx1S(ikx));
+          phirad=atan2(ky1S(iky),kx1S(ikx));
           
           Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10); % Psi1s(kx,ky) = Psi1s(k,phi)
           if iky >= Ny/2+1 && iky <= Ny-1
@@ -333,7 +333,7 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 % 
 Psi1splot = Psi1s(Nx/2+1:Nx,:)' %; temp array for plotting the right half of the symmetrical variance spectrum
 figure(4)
-contour(real(Psi1splot))
+contour(linspace(0,2,32),linspace(-2,2,64),real(Psi1splot))
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
 
 % surfc(1:64,1:64,real(Psi1s))
