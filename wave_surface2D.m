@@ -201,16 +201,41 @@ kypos = kymin + Deltaky*(1:Nkypos);
 xFFT = 1:((Nx-1)/2); % = [1,2,...,(Nx-1)/2]
 yFFT = 1:((Ny-1)/2);
 kxFFT = (2.0*pi/Lx)*[0.0, xFFT, Nx/2.0 ,-Nx/2.0+xFFT]; % in rad/m
+<<<<<<< HEAD
 kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT];
+=======
+kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT]
+%To plot the kyFFT and kxFFT - Looks OK 
+% figure(1)
+% subplot(1,2,1)
+% plot(kyFFT)
+% subplot(1,2,2)
+% plot(kxFFT) 
+>>>>>>> refs/remotes/origin/Beta-branch
 
 % ;----- Compute the math frequencies
 % Worth controlling if any differences with SHIFT and circshift
 kxmath = circshift(kxFFT,Nx/2-1);
 kymath = circshift(kyFFT,Ny/2-1);
+%To plot the kymath and kxmath - Looks OK  
+% figure(2)
+%  subplot(1,2,1)
+%  plot(kymath)
+%  subplot(1,2,2)
+%  plot(kxmath) 
 
 % ;----- Compute the 1S frequencies
 kx1S = [0.0, kxpos];
 ky1S = kymath;
+
+%To plot the kx1S and ky1S  
+figure(3)
+title('kx1S and ky1s')
+subplot(1,2,1)
+plot(kx1S)
+subplot(1,2,2)
+plot(ky1S) 
+
 
 % ;if(idebug eq 1) then begin
 % ;  print,' kxpos  = ',kxpos
@@ -277,14 +302,21 @@ nplotrow = 2; % number of plot rows
 % ; The factor of 1/2 on Psi1s to get a two-sided spectrum Psi2S is included in C3.
 
 Psi1s=zeros(Nx,Ny);%holds all kxmath and kymath frequencies
+<<<<<<< HEAD
 for ikx=1:Nx/2 % loop over non-neg kx values kx1S
     for iky = Ny/2:Ny %non-negative ky values
           k = sqrt(kx1S(ikx)*kx1S(ikx) + ky1S(iky)*ky1S(iky));
           phirad=atan(ky1S(iky)+i*kx1S(ikx));
+=======
+for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2
+    for iky = Ny/2:Ny %non-negative ky values Ny/2 - Ny
+          k = sqrt(kx1S(ikx)*kx1S(ikx) + ky1S(iky)*ky1S(iky))
+          phirad=atan2(ky1S(iky),kx1S(ikx));
+>>>>>>> refs/remotes/origin/Beta-branch
           
           Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10); % Psi1s(kx,ky) = Psi1s(k,phi)
-          if iky >= Ny/2+1 && iky+1 <= Ny-1
-              Psi1s(ikx+Nx/2,Ny-1-iky)=Psi1s(ikx+Nx/2,iky);
+          if iky >= Ny/2+1 && iky <= Ny-1
+              Psi1s(ikx+Nx/2,Ny-iky)=Psi1s(ikx+Nx/2,iky);
           end
     end
 end
@@ -310,10 +342,19 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 % 
 % ; ***** CONTOUR THE ONE-SIDED, 2D VARIANCE SPECTRUM; UPPER LEFT PANEL *****  
 % 
+<<<<<<< HEAD
 Psi1splot = Psi1s(Nx/2+1:Nx,Ny/2+1:Ny) %; temp array for plotting the right half of the symmetrical variance spectrum
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
 
 contour(Nx/2+1:Ny,Ny/2+1:Ny,real(Psi1splot))
+=======
+Psi1splot = Psi1s(Nx/2+1:Nx,:)' %; temp array for plotting the right half of the symmetrical variance spectrum
+figure(4)
+contour(linspace(0,2,32),linspace(-2,2,64),real(Psi1splot))
+% ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
+
+% surfc(1:64,1:64,real(Psi1s))
+>>>>>>> refs/remotes/origin/Beta-branch
 
 % ; ***** GENERATE A RANDOM HERMITIAN zhat(kx,ky) ***** 
 % 
@@ -343,6 +384,7 @@ contour(Nx/2+1:Ny,Ny/2+1:Ny,real(Psi1splot))
 % ;     Check that Imag{invFFT{zhat}} = 0
 % 
 % ; shift from math to FFT frequency order
+
 
 Psi1s = circshif( Psi1s, -(Nx/2-2), -(Ny/2-2)); %Minus 0 or 2? Matlab note
 
@@ -639,4 +681,3 @@ print,'   sample avg slope angle, crosswind = ', thetay
 %}
 
 zcomplx = 0 %; now done with zcomplx array; free storage
-

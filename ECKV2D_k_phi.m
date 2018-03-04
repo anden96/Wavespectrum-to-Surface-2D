@@ -117,6 +117,9 @@ for ku=1:Nk
 
     end %; phiv
   end %; ku
+<<<<<<< HEAD
   
   
 
+=======
+>>>>>>> refs/remotes/origin/Beta-branch
