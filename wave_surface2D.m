@@ -318,7 +318,6 @@ for iky=1:Ny
 end
 %; set (0,0) frequency to 0 to force MSL = 0:
 Psi1s(Nx/2,Ny/2) = 0.0;
- surf(real(Psi1s))
 
 
 %; Psi1s now has all frequencies in math order
@@ -332,7 +331,9 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 % 
 % ; ***** CONTOUR THE ONE-SIDED, 2D VARIANCE SPECTRUM; UPPER LEFT PANEL *****  
 % 
-Psi1splot = Psi1s(Nx/2+1:Nx,Ny/2+1:Ny) %; temp array for plotting the right half of the symmetrical variance spectrum
+Psi1splot = Psi1s(Nx/2+1:Nx,:)' %; temp array for plotting the right half of the symmetrical variance spectrum
+figure(4)
+contour(real(Psi1splot))
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
 
 % surfc(1:64,1:64,real(Psi1s))
