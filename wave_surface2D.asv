@@ -202,7 +202,7 @@ xFFT = 1:((Nx-1)/2); % = [1,2,...,(Nx-1)/2]
 yFFT = 1:((Ny-1)/2);
 kxFFT = (2.0*pi/Lx)*[0.0, xFFT, Nx/2.0 ,-Nx/2.0+xFFT]; % in rad/m
 kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT]
-%To plot the kyFFT and kxFFT - Looks OK but would not 
+%To plot the kyFFT and kxFFT - Looks OK 
 % figure(1)
 % subplot(1,2,1)
 % plot(kyFFT)
@@ -213,12 +213,25 @@ kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT]
 % Worth controlling if any differences with SHIFT and circshift
 kxmath = circshift(kxFFT,Nx/2-1);
 kymath = circshift(kyFFT,Ny/2-1);
-
-
+%To plot the kymath and kxmath - Looks OK  
+% figure(2)
+%  subplot(1,2,1)
+%  plot(kymath)
+%  subplot(1,2,2)
+%  plot(kxmath) 
 
 % ;----- Compute the 1S frequencies
 kx1S = [0.0, kxpos];
 ky1S = kymath;
+
+%To plot the kx1S and ky1S  
+figure(3)
+title('kx1S and ky1s')
+subplot(1,2,1)
+plot(kx1S)
+subplot(1,2,2)
+plot(ky1S) 
+
 
 % ;if(idebug eq 1) then begin
 % ;  print,' kxpos  = ',kxpos
@@ -285,13 +298,13 @@ nplotrow = 2; % number of plot rows
 % ; The factor of 1/2 on Psi1s to get a two-sided spectrum Psi2S is included in C3.
 
 Psi1s=zeros(Nx,Ny);%holds all kxmath and kymath frequencies
-for ikx=1:Nx/2 % loop over non-neg kx values kx1S
-    for iky = Ny/2:Ny %non-negative ky values
+for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2
+    for iky = Ny/2:Ny %non-negative ky values Ny/2 - Ny
           k = sqrt(kx1S(ikx)*kx1S(ikx) + ky1S(iky)*ky1S(iky))
           phirad=atan(ky1S(iky)+i*kx1S(ikx));
           
           Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10); % Psi1s(kx,ky) = Psi1s(k,phi)
-          if iky >= Ny/2+1 && iky+1 <= Ny-1
+          if iky >= Ny/2+1 && iky <= Ny-
               Psi1s(ikx+Nx/2,Ny-1-iky)=Psi1s(ikx+Nx/2,iky);
           end
     end
@@ -305,7 +318,7 @@ for iky=1:Ny
 end
 %; set (0,0) frequency to 0 to force MSL = 0:
 Psi1s(Nx/2,Ny/2) = 0.0;
-% plot(real(Psi1s))
+ contour(real(Psi1s))
 
 
 %; Psi1s now has all frequencies in math order
