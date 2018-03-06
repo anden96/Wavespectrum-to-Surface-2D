@@ -333,7 +333,9 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 % 
 Psi1splot = Psi1s(Nx/2+1:Nx,:)'; %; temp array for plotting the right half of the symmetrical variance spectrum
 figure(4)
-contour(linspace(0,2,32),linspace(-2,2,64),real(Psi1splot))
+vpsi=[10 ^0, 10^-1, 10^-2, 10^-3 10^-4 10^-5 10^-6 10^-7 10^-8];
+[cpsi,hpsi]=contour(linspace(0,2,32),linspace(-2,2,64),real(Psi1splot),vpsi)
+clabel(cpsi,hpsi,vpsi)
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
 
 % surfc(1:64,1:64,real(Psi1s))
@@ -389,7 +391,7 @@ C3 = 1/sqrt(8);
 
 Psiroot = C3*sqrt(Psi1s*Deltakx*Deltaky); 
 
-Psi1s = 0; %; now done with Psi1s array; free storage
+% Psi1s = 0; %; now done with Psi1s array; free storage
 
 % ;***** CAN START LOOPING HERE TO GENERATE MULTIPLE SURFACES 
 % ;      FOR THE SAME VARIANCE   SPECTRUM BUT DIFFERENT RANDOMIZATIONS.
@@ -635,7 +637,7 @@ disp('   avg z(x,y) (should = 0) = '+num2str(zavg));
 
 disp('   max |Imag{zcomplx}| (should = 0) ='+num2str(max(abs(imag(zcomplx)))));
 
-disp("Parseval's identity:")
+disp('Parsevals identity:')
 disp('                            sum z^2 ='+num2str(sumzsq));
 disp('   Nx * Nx * sum zhat^2 (one-sided) ='+num2str(Nx*(Ny)*sumzhatsq));
 disp('   Nx * Nx * sum zhat^2 (two-sided) ='+num2str((Nx)*(Ny)*sumzhat2));
