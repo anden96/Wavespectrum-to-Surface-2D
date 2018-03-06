@@ -331,7 +331,7 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 % 
 % ; ***** CONTOUR THE ONE-SIDED, 2D VARIANCE SPECTRUM; UPPER LEFT PANEL *****  
 % 
-Psi1splot = Psi1s(Nx/2+1:Nx,:)' %; temp array for plotting the right half of the symmetrical variance spectrum
+Psi1splot = Psi1s(Nx/2+1:Nx,:)'; %; temp array for plotting the right half of the symmetrical variance spectrum
 figure(4)
 contour(linspace(0,2,32),linspace(-2,2,64),real(Psi1splot))
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
@@ -368,7 +368,9 @@ contour(linspace(0,2,32),linspace(-2,2,64),real(Psi1splot))
 % ; shift from math to FFT frequency order
 
 
-Psi1s = circshif( Psi1s, -(Nx/2-2), -(Ny/2-2)); %Minus 0 or 2? Matlab note
+Psi1s = circshift( Psi1s, [(Nx/2-1) (Ny/2-1)]); %Minus 0 or 2? Matlab note
+
+
 
 % ; (0,0) freq should now be at array location [0,0]
 % print,'FFT freq order: Psi1s[0,0] (should = 0) = ',Psi1s[0,0]
@@ -402,11 +404,12 @@ ranr=zeros(Nx,Ny); %; for the random real parts of zhat
 rans=zeros(Nx,Ny); %for the random imaginary parts 
 
 for ikx=1:Nx
-    ranr(ikx,:)=randn(Ny);
+    ranr(ikx,:)=randn(1,Ny);
 end
 for ikx=1:Nx
-    rans(ikx,:)=randn(Ny);
+    rans(ikx,:)=randn(1,Ny);
 end
+
 %; define the complex Hermitian zhat array for the full range of pos and negative frequencies
 zhat=zeros(Nx,Ny);
 
@@ -426,12 +429,14 @@ zhat=zeros(Nx,Ny);
 % ; the non-zero and non-Nyquist frequencies:
 % Note from Andreas: MATLAB work from 1->Nx unlike IDL 0->Nx-1
 
+%Unsore on the indexing - Andreas 
 for ikx=2:Nx/2
-    for iky=1:Ny
-        zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-ik))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
+    for iky=2:Ny-1
+        zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
       zhat(Nx-ikx,Ny-iky) = conj( zhat(ikx,iky) );
     end
 end
+disp('ok')
 
 % ; all ky for kx = 0 freq at index 0 and the Nyquist frequency at kx index Nx/2:
  for iky=2:Ny/2
@@ -479,7 +484,7 @@ end
 
 Zreal = circshift( real(zhat), [Nx/2, Ny/2]);
 Zimag = circshift( imag(zhat), [Nx/2, Ny/2]);
-
+contour(real(zhat))
 idebug = 0;
 
 if idebug == 1 
@@ -580,6 +585,7 @@ cgColorbar, NColors=ncolors, Bottom=firstcolor, /Discrete, /vertical, position=b
            ticknames=contnames,charsize=0.8*!p.charsize 
             
 %}
+
 
 % ; ***** TAKE THE INVERSE FFT TO GET THE SEA SURFACE *****
 disp('Frequency-shifted zhat(0,0) [should = (0,0)] ='+num2str(zhat(1,1)));
