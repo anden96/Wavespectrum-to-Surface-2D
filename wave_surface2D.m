@@ -431,7 +431,7 @@ zhat=zeros(Nx,Ny);
 % ; the non-zero and non-Nyquist frequencies:
 % Note from Andreas: MATLAB work from 1->Nx unlike IDL 0->Nx-1
 
-%Unsore on the indexing - Andreas 
+%Unsure on the indexing - Andreas 
 for ikx=2:Nx/2
     for iky=2:Ny-1
         zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
@@ -443,40 +443,40 @@ disp('ok')
 % ; all ky for kx = 0 freq at index 0 and the Nyquist frequency at kx index Nx/2:
  for iky=2:Ny/2
     ikx = Nx/2+1;
-    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
+    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
     zhat(ikx,Ny-iky) = conj( zhat(ikx,iky) );
     ikx = 1;
-    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny-iky) * Psiroot(ikx,Ny-iky))+j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny-iky) * Psiroot(ikx,Ny-iky));
+    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny-iky) * Psiroot(ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny-iky) * Psiroot(ikx,Ny-iky));
     zhat(ikx,Ny-iky) = conj( zhat(ikx,iky));
  end
 
 %  ; all kx for ky = 0 and Nyquist frequency at ky index Ny/2:
  for ikx=2:Nx/2+1
    iky = Ny/2+1;
-    zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+j(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
+    zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
     zhat(Nx-ikx,iky) = conj( zhat(ikx,iky) );
    iky = 1;
-    zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,iky) * Psiroot(Nx-ikx,iky))+j(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,iky) * Psiroot(Nx-ikx,iky));
+    zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,iky) * Psiroot(Nx-ikx,iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,iky) * Psiroot(Nx-ikx,iky));
     zhat(Nx-ikx,iky) = conj( zhat(ikx,iky) );
  end
  
 %  ; Nyquist ky freq at ky index Ny/2
  ikx = 1;
  iky = Ny/2+1;
- zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny-iky) * Psiroot(ikx,Ny-iky))+j(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny-iky) * Psiroot(ikx,Ny-iky));
+ zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny-iky) * Psiroot(ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny-iky) * Psiroot(ikx,Ny-iky));
 
 % ; Nyquist kx freq at kx index Nx/2
  ikx = Nx/2+1;
  iky = 1;
- zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,iky) * Psiroot(Nx-ikx,iky)) +j(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,iky) * Psiroot(Nx-ikx,iky));
+ zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,iky) * Psiroot(Nx-ikx,iky)) +i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,iky) * Psiroot(Nx-ikx,iky));
 
 % ; the "double" Nyquist frequency at Nx/2,Ny/2
  ikx = Nx/2+1;
  iky = Ny/2+1;
- zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+ j(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
+ zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
  
 %  ; set the (0,0) value to 0 (MSL = 0)
- zhat(1,1) =(0+ j0);
+ zhat(1,1) =(0+ i*0);
  
 %  ; zhat as just defined has the frequencies in FFT order, as needed by the FFT routine.
 % 
@@ -486,7 +486,6 @@ disp('ok')
 
 Zreal = circshift( real(zhat), [Nx/2, Ny/2]);
 Zimag = circshift( imag(zhat), [Nx/2, Ny/2]);
-contour(real(zhat))
 idebug = 0;
 
 if idebug == 1 
@@ -509,7 +508,13 @@ endfor
 
 %}
 end
+figure(5)
+contour(Zreal')
+title('zhat real')
 
+figure(6)
+contour(Zimag')
+title('zhat imag')
 % ; CONTOUR ZREAL AND ZIMAG TO CHECK SYMMETRY
 %{
 minRe = min(zreal,max=maxre)
@@ -601,6 +606,8 @@ zcomplx = ifft(zhat);
 % ; The surface wave ampltudes are the real part of the inverse FFT
 
 zsurf = real(zcomplx);
+figure(7)
+surfc(zsurf)
 % zimag = IMAGINARY(zcomplx)
 
 % ; ----- Checks on the generated surface
