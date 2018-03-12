@@ -333,8 +333,8 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 % 
 Psi1splot = Psi1s(Nx/2+1:Nx,:)'; %; temp array for plotting the right half of the symmetrical variance spectrum
 figure(4)
-vpsi=[10 ^0, 10^-1, 10^-2, 10^-3 10^-4 10^-5 10^-6 10^-7 10^-8];
-[cpsi,hpsi]=contour(linspace(0,2,32),linspace(-2,2,64),real(Psi1splot),vpsi)
+vpsi=[10^0, 10^-1, 10^-2, 10^-3 10^-4 10^-5 10^-6 10^-7 10^-8];
+[cpsi,hpsi]=contourf(((abs((Psi1splot)))),5);%vpsi)
 clabel(cpsi,hpsi,vpsi)
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
 
@@ -413,7 +413,7 @@ for ikx=1:Nx
 end
 
 %; define the complex Hermitian zhat array for the full range of pos and negative frequencies
-zhat=zeros(Nx,Ny);
+zhat=1/300*ones(Nx,Ny);
 
 % ;----- Compute zhat(kx,ky)
 % 
@@ -432,48 +432,48 @@ zhat=zeros(Nx,Ny);
 % Note from Andreas: MATLAB work from 1->Nx unlike IDL 0->Nx-1
 
 %Unsure on the indexing - Andreas 
-for ikx=2:Nx/2
-    for iky=2:Ny-1
-        zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
-      zhat(Nx-ikx,Ny-iky) = conj( zhat(ikx,iky) );
+for ikx=1:Nx/2
+    for iky=1:Ny
+        zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky));
+      zhat(Nx+1-ikx,Ny+1-iky) = conj( zhat(ikx,iky) );
     end
 end
 disp('ok')
 
 % ; all ky for kx = 0 freq at index 0 and the Nyquist frequency at kx index Nx/2:
- for iky=2:Ny/2
+ for iky=1:Ny/2+1
     ikx = Nx/2+1;
-    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
-    zhat(ikx,Ny-iky) = conj( zhat(ikx,iky) );
+    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky));
+    zhat(ikx,Ny+1-iky) = conj( zhat(ikx,iky) );
     ikx = 1;
-    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny-iky) * Psiroot(ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny-iky) * Psiroot(ikx,Ny-iky));
-    zhat(ikx,Ny-iky) = conj( zhat(ikx,iky));
+    zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny+1-iky) * Psiroot(ikx,Ny+1-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny+1-iky) * Psiroot(ikx,Ny+1-iky));
+    zhat(ikx,Ny+1-iky) = conj( zhat(ikx,iky));
  end
 
 %  ; all kx for ky = 0 and Nyquist frequency at ky index Ny/2:
- for ikx=2:Nx/2+1
+ for ikx=1:Nx/2+1
    iky = Ny/2+1;
-    zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
-    zhat(Nx-ikx,iky) = conj( zhat(ikx,iky) );
+    zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky));
+    zhat(Nx+1-ikx,iky) = conj( zhat(ikx,iky) );
    iky = 1;
-    zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,iky) * Psiroot(Nx-ikx,iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,iky) * Psiroot(Nx-ikx,iky));
-    zhat(Nx-ikx,iky) = conj( zhat(ikx,iky) );
+    zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx+1-ikx,iky) * Psiroot(Nx+1-ikx,iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx+1-ikx,iky) * Psiroot(Nx+1-ikx,iky));
+    zhat(Nx+1-ikx,iky) = conj( zhat(ikx,iky) );
  end
  
 %  ; Nyquist ky freq at ky index Ny/2
  ikx = 1;
  iky = Ny/2+1;
- zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny-iky) * Psiroot(ikx,Ny-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny-iky) * Psiroot(ikx,Ny-iky));
+ zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny+1-iky) * Psiroot(ikx,Ny+1-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny+1-iky) * Psiroot(ikx,Ny+1-iky));
 
 % ; Nyquist kx freq at kx index Nx/2
  ikx = Nx/2+1;
  iky = 1;
- zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,iky) * Psiroot(Nx-ikx,iky)) +i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,iky) * Psiroot(Nx-ikx,iky));
+ zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx+1-ikx,iky) * Psiroot(Nx+1-ikx,iky)) +i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx+1-ikx,iky) * Psiroot(Nx+1-ikx,iky));
 
 % ; the "double" Nyquist frequency at Nx/2,Ny/2
  ikx = Nx/2+1;
  iky = Ny/2+1;
- zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx-ikx,Ny-iky) * Psiroot(Nx-ikx,Ny-iky));
+ zhat(ikx,iky) = ( ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky))+ j*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx+1-ikx,Ny+1-iky) * Psiroot(Nx+1-ikx,Ny+1-iky));
  
 %  ; set the (0,0) value to 0 (MSL = 0)
  zhat(1,1) =(0+ i*0);
@@ -508,8 +508,10 @@ endfor
 
 %}
 end
+
+vzplot=[0.02 0.016 0.012 0.008 0.004 0 -0.004 -0.008 -0.012 -0.016 -0.020]
 figure(5)
-contour(Zreal')
+contourf(linspace(-2,2,64),linspace(-2,2,64),Zreal',vzplot)
 title('zhat real')
 
 figure(6)
