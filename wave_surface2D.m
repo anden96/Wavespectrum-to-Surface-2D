@@ -201,7 +201,7 @@ kypos = kymin + Deltaky*(1:Nkypos);
 xFFT = 1:((Nx-1)/2); % = [1,2,...,(Nx-1)/2]
 yFFT = 1:((Ny-1)/2);
 kxFFT = (2.0*pi/Lx)*[0.0, xFFT, Nx/2.0 ,-Nx/2.0+xFFT]; % in rad/m
-kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT]
+kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT];
 %To plot the kyFFT and kxFFT - Looks OK 
 % figure(1)
 % subplot(1,2,1)
@@ -300,7 +300,7 @@ nplotrow = 2; % number of plot rows
 Psi1s=zeros(Nx,Ny);%holds all kxmath and kymath frequencies
 for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2
     for iky = Ny/2:Ny %non-negative ky values Ny/2 - Ny
-          k = sqrt(kx1S(ikx)*kx1S(ikx) + ky1S(iky)*ky1S(iky))
+          k = sqrt(kx1S(ikx)*kx1S(ikx) + ky1S(iky)*ky1S(iky));
           phirad=atan2(ky1S(iky),kx1S(ikx));
           
           Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10); % Psi1s(kx,ky) = Psi1s(k,phi)
@@ -334,10 +334,11 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 Psi1splot = Psi1s(Nx/2+1:Nx,:)'; %; temp array for plotting the right half of the symmetrical variance spectrum
 figure(4)
 vpsi=[10^0, 10^-1, 10^-2, 10^-3 10^-4 10^-5 10^-6 10^-7 10^-8];
-[cpsi,hpsi]=contourf(((abs((Psi1splot)))),5);%vpsi)
-clabel(cpsi,hpsi,vpsi)
+% [cpsi,hpsi]=contourf(((abs((Psi1splot)))),5);%vpsi)
+% clabel(cpsi,hpsi,vpsi)
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
-
+contourf(Psi1splot,vpsi)
+colorbar
 % surfc(1:64,1:64,real(Psi1s))
 
 % ; ***** GENERATE A RANDOM HERMITIAN zhat(kx,ky) ***** 
@@ -413,7 +414,7 @@ for ikx=1:Nx
 end
 
 %; define the complex Hermitian zhat array for the full range of pos and negative frequencies
-zhat=1/30*ones(Nx,Ny);
+zhat=ones(Nx,Ny);
 
 % ;----- Compute zhat(kx,ky)
 % 
@@ -438,7 +439,7 @@ for ikx=2:Nx/2
       zhat(Nx+2-ikx,Ny+2-iky) = conj( zhat(ikx,iky) );
     end
 end
-disp('ok')
+
 
 % ; all ky for kx = 0 freq at index 0 and the Nyquist frequency at kx index Nx/2:
  for iky=2:Ny/2
@@ -450,10 +451,10 @@ disp('ok')
     zhat(ikx,Ny+2-iky) = conj( zhat(ikx,iky));
  end
 %  Temp sol for NaN in Ps1s
- zhat(2,3)=10^-8;
- zhat(5,3)=10^-8;
-zhat(Nx,Ny-1)=10^-8;
-zhat(Nx+2-5,Ny+2-3)=10^-8;
+  zhat(2,3)=7*10^-6;
+  zhat(5,3)=7*10^-6;
+ zhat(Nx,Ny-1)=7*10^-6;
+zhat(Nx+2-5,Ny+2-3)=7*10^-6;
 %  ; all kx for ky = 0 and Nyquist frequency at ky index Ny/2:
  for ikx=2:Nx/2+1
    iky = Ny/2+1;
@@ -512,9 +513,11 @@ endfor
 %}
 end
 
-vzplot=[0.02 0.016 0.012 0.008 0.004 0 -0.004 -0.008 -0.012 -0.016 -0.020]
+vzplot=[0.02 0.016 0.012 0.008 0.004 0 -0.004 -0.008 -0.012 -0.016 -0.020];
 figure(5)
 contourf(linspace(-2,2,64),linspace(-2,2,64),Zreal',vzplot)
+colorbar
+
 title('zhat real')
 
 figure(6)
@@ -613,9 +616,10 @@ zcomplx = ifft2(zhat);
 
 zsurf = real(zcomplx);
 figure(7)
-vzsurf=[0.6 0.45 0.3  0 -0.15 -0.3 -0.45 -0.6]
-surfc(linspace(0,100,64),linspace(0,100,64),zsurf)
-% zimag = IMAGINARY(zcomplx)
+vzsurf=[0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6]
+surfc(linspace(0,100,64),linspace(0,100,64),zsurf/(Deltakx*Deltaky))
+colorbar
+zimag = imag(zcomplx);
 
 % ; ----- Checks on the generated surface
 disp('Checks on the generated z(x,y):')
@@ -669,7 +673,7 @@ thetax = 0;
 for ix = 2:Nx
   for iy = 1:Ny
     dzdx2 = dzdx2 + (zsurf(ix,iy) - zsurf(ix-1,iy))^2;
-    thetax = thetax + abs(atan(zsurf(ix,iy) - zsurf(ix-1,iy),Deltax)*radeg);
+    thetax = thetax + abs(atan2(zsurf(ix,iy) - zsurf(ix-1,iy),Deltax)); %removed radeg matlab inputs in rad for atan default
   end
 end
 dzdx2 = dzdx2/(Deltax*Deltax*(Nx)*(Ny+1));
@@ -685,4 +689,4 @@ print,'   sample avg slope angle, alongwind = ', thetax
 print,'   sample avg slope angle, crosswind = ', thetay
 %}
 
-zcomplx = 0 %; now done with zcomplx array; free storage
+% zcomplx = 0 %; now done with zcomplx array; free storage
