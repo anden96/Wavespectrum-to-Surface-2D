@@ -394,11 +394,6 @@ Psi1s = circshift( Psi1s,[Nx/2+1 Ny/2+1]); %Minus 0 or 2? Matlab note
                                                 %"mathorder" so -N/2-1
                                                 %should be good for FFT
                                                 %order, right?
-=======
-Psi1s = circshift( Psi1s, [(Nx/2-1) (Ny/2-1)]); %Minus 0 or 2? Matlab note
-
-
->>>>>>> ffa6f5aedf24867cb7edd09e1fd683117649ce2f
 
 % ; (0,0) freq should now be at array location [0,0] OK as is right now
 % ; print,'FFT freq order: Psi1s[0,0] (should = 0) = ',Psi1s[0,0]
@@ -418,7 +413,11 @@ C3 = 1/sqrt(8);
 Psiroot = C3*sqrt(Psi1s*Deltakx*Deltaky); 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 %Psi1s = 0; %; now done with Psi1s array; free storage
+=======
+% Psi1s = 0; %; now done with Psi1s array; free storage
+>>>>>>> ffa6f5aedf24867cb7edd09e1fd683117649ce2f
 =======
 % Psi1s = 0; %; now done with Psi1s array; free storage
 >>>>>>> ffa6f5aedf24867cb7edd09e1fd683117649ce2f
