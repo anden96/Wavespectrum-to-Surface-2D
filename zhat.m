@@ -15,8 +15,6 @@ a = zeros(L,L);
 Psi1s = elfunW(k,1);
 
 %Check ishermitian(z) to see that it returns 1
-for i = 1:1:L
-
     rho1 = normrnd(0,1,L,L);
     sigma1 = normrnd(0,1,L,L);
     Psi2s = circshift(Psi1s,-51);
@@ -24,17 +22,10 @@ for i = 1:1:L
 
     z = (1./sqrt(2)).*(zhat01+ctranspose(zhat01));
     
-    Z = ifft(z);
+    Z = ifft2(z);
     imag(Z)
     Y = real(Z);
-    b(i,:) = sum(Y'*Y);
-end
 
 ishermitian(z)
 
-subplot(2,1,1);
 surf(Y)
-subplot(2,1,2);
-surf(b)
-figure(2)
-plot(k,Psi2s)
