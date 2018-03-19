@@ -318,7 +318,7 @@ end
 %; fill in the negative kx values by symmetry
 for iky=1:Ny
   for ikx = 1:Nx/2-1
-      Psi1s(ikx,iky) = -Psi1s(Nx-1-ikx,iky); %Added a minus sign here - Oskar
+      Psi1s(ikx,iky) = Psi1s(Nx-1-ikx,iky); 
   end
 end
 %; set (0,0) frequency to 0 to force MSL = 0:
