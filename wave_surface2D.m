@@ -318,7 +318,7 @@ end
 %; fill in the negative kx values by symmetry
 for iky=1:Ny
   for ikx = 1:Nx/2-1
-      Psi1s(ikx,iky) = Psi1s(Nx-1-ikx,iky);
+      Psi1s(ikx,iky) = -Psi1s(Nx-1-ikx,iky); %Added a minus sign here - Oskar
   end
 end
 %; set (0,0) frequency to 0 to force MSL = 0:
@@ -413,9 +413,8 @@ C3 = 1/sqrt(8);
 
 Psiroot = C3*sqrt(Psi1s*Deltakx*Deltaky); 
 
-% Psi1s = 0; %; now done with Psi1s array; free storage
-% Psi1s = 0; %; now done with Psi1s array; free storage
-% Psi1s = 0; %; now done with Psi1s array; free storage
+% Psi1s = 0; %; now done with Psi1s array; free storage - Better to keep it
+% for debugging purposes - Oskar
 
 
 % ;***** CAN START LOOPING HERE TO GENERATE MULTIPLE SURFACES 
