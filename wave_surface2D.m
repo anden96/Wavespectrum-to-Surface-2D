@@ -389,7 +389,7 @@ colorbar
 
 % ; shift from math to FFT frequency order
 
-Psi1s = circshift( Psi1s,[Nx/2+1 Ny/2+1]); %Minus 0 or 2? Matlab note
+Psi1s = circshift( Psi1s,[Nx/2-1 Ny/2-1]); %Minus 0 or 2? Matlab note
                                                 %should be N/2 + 1, thus
                                                 %Psi1s(N/2) = 0 to get
                                                 %"mathorder" so -N/2-1
@@ -474,10 +474,10 @@ end
     zhat(ikx,Ny+2-iky) = conj( zhat(ikx,iky));
  end
 %  Temp sol for NaN in Ps1s
-  zhat(2,3)=7*10^-6;
-  zhat(5,3)=7*10^-6;
- zhat(Nx,Ny-1)=7*10^-6;
-zhat(Nx+2-5,Ny+2-3)=7*10^-6;
+%  zhat(2,3)=7*10^-6;
+%  zhat(5,3)=7*10^-6;
+%  zhat(Nx,Ny-1)=7*10^-6;
+%  zhat(Nx+2-5,Ny+2-3)=7*10^-6;
 %  ; all kx for ky = 0 and Nyquist frequency at ky index Ny/2:
  for ikx=2:Nx/2+1
    iky = Ny/2+1;

@@ -80,25 +80,25 @@ for ku=1:Nk
     
 %     ;  define the S(k) spectrum for the given k value
     
-    c = sqrt((g/k)*(1.0 + (k/km)^2)); %; = sqrt(g/k + Tw*k/rhow)
-    sqrtkkp = sqrt(k/kp);
+    c = sqrt((g/k).*(1.0 + (k./km).^2)); %; = sqrt(g/k + Tw*k/rhow)
+    sqrtkkp = sqrt(k./kp);
     
 %     ;  the low-frequency (long-wave) part  B_l of Eq. (31)
     Capgamma = exp(-twosig2*(sqrtkkp - 1.0)^2); %; below Eq. (3)
     fJp = gamma^Capgamma; % Eq. (3)
-    fLpm = exp(-1.25*(kp/k)^2); %; Eq. (2)
-    Fp = fLpm*fJp*exp(-0.3162*Capomega*(sqrtkkp - 1.0)); %; Eq. (32)
-    Bl = 0.5*alphap*(cp/c)*Fp;    %; sqrt(k/kp) = cp/c
+    fLpm = exp(-1.25.*(kp/k).^2); %; Eq. (2)
+    Fp = fLpm.*fJp.*exp(-0.3162*Capomega.*(sqrtkkp - 1.0)); %; Eq. (32)
+    Bl = 0.5.*alphap.*(cp/c)*Fp;    %; sqrt(k/kp) = cp/c
 %     ;Slow = Bl/k^3
     
 %     ; the high-frequency (short-wave) part B_h of Eq. (40)
 %     ; NB: A typo in Eq. (41) of the Elfouhaily paper omits the Lpm*Jp factor
 %     ; from the definition of Fm; compare with Fp in Eq. (32)
-    Fm = fLpm*fJp*exp(-0.25*(k/km - 1.0)^2); % Eq. (41) with typo fixed
-    Bh = 0.5*alpham*(cm/c)*Fm; % Eq. (40)
+    Fm = fLpm.*fJp.*exp(-0.25*(k/km - 1.0)^2); % Eq. (41) with typo fixed
+    Bh = 0.5.*alpham.*(cm./c).*Fm; % Eq. (40)
 %     ;Shigh = Bh/k^3
     
-    Deltak = tanh( ao + ap*(c/cp)^(2.5) + am*(cm/c)^(2.5) ); % ; Eq. (57)
+    Deltak = tanh( ao + ap.*(c./cp).^(2.5) + am.*(cm./c).^(2.5) ); % ; Eq. (57)
     
 %     ; combine as in Eq. (67) to get (Note: this is Psi(k,phi), so 1/k^4)
     
@@ -106,7 +106,7 @@ for ku=1:Nk
 %     ;   E2D[ku,phiv] = (0.5/!pi)*(Bl + Bh)/k^4 * (1.0 + Deltak*cos(2.0*phi))
 %     ; return only downwind values and double the spreading function
     if phi >= -0.5*pi && phi <= 0.5*pi
-      E2D(ku,phiv) = (1.0/pi)*(Bl + Bh)/k^4 * (1.0 + Deltak*cos(2.0*phi));
+      E2D(ku,phiv) = (1.0/pi).*(Bl + Bh)./k.^4 * (1.0 + Deltak.*cos(2.0*phi));
     else
       E2D(ku,phiv) = 0.0;
     end  
