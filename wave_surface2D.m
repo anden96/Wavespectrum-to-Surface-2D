@@ -223,7 +223,8 @@ kymath = circshift(kyFFT,Ny/2-1);
 %  plot(kxmath) 
 
 % ;----- Compute the 1S frequencies
-kx1S = [0.0, kxpos];
+
+kx1S = [0, kxpos] ;
 ky1S = kymath;
 
 %To plot the kx1S and ky1S  
@@ -304,13 +305,12 @@ for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2, exclude 0 and go to kx
     for iky = Ny/2:Ny %non-negative ky values Ny/2 - Ny
 
           k = sqrt(kx1S(ikx).^2 + ky1S(iky).^2)
-          k = sqrt(kx1S(ikx)*kx1S(ikx) + ky1S(iky)*ky1S(iky));
 
           phirad=atan2(ky1S(iky),kx1S(ikx));
           
           Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10); % Psi1s(kx,ky) = Psi1s(k,phi)
           if iky >= Ny/2+1 && iky <= Ny-1
-              Psi1s(ikx+Nx/2,Ny-iky)=Psi1s(ikx+Nx/2,iky);
+              Psi1s(ikx+Nx/2,Ny-iky+1)=Psi1s(ikx+Nx/2,iky);
           end
     end
 end
@@ -342,7 +342,7 @@ vpsi=[10^0, 10^-1, 10^-2, 10^-3 10^-4 10^-5 10^-6 10^-7 10^-8];
 % [cpsi,hpsi]=contourf(((abs((Psi1splot)))),5);%vpsi)
 % clabel(cpsi,hpsi,vpsi)
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
-contourf(Psi1splot,vpsi)
+contourf(10*log10(Psi1splot))
 colorbar
 % surfc(1:64,1:64,real(Psi1s))
 
@@ -547,83 +547,6 @@ figure(6)
 contour(Zimag')
 title('zhat real no shift')
 contourf(linspace(-2,2,64),linspace(-2,2,64),real(zhat)',vzplot)
-% ; CONTOUR ZREAL AND ZIMAG TO CHECK SYMMETRY
-%{
-minRe = min(zreal,max=maxre)
-print,'minRe, maxRe = ',minRe, maxRe
-
-; reset plot ranges to nice values and define nice contour levels
-minzhat = -0.02;  min([minRe,minIM])
-maxzhat = 0.02 ;max([maxRe,maxIM])
-
-Nlevels = 11; -(minzhat - maxzhat) + 1 ; = num of contour lines including minz and maxz
-zhatlevels = minzhat + (maxzhat - minzhat)/float(Nlevels-1)*findgen(Nlevels)  
-;print,'contour levels for zhat = ',zhatlevels 
-contnames = strarr(Nlevels)
-;for i=0,n_elements(contnames)-1 do contnames(i) = '10!u' + string(zhatlevels(i),format='(i3)') + '!n'
-for i=0,n_elements(contnames)-1 do contnames(i) = string(zhatlevels(i),format='(f6.3)')
-;print,'contnames = ',contnames
-
-; load a color table for this contour plot
-firstcolor = 1 ; index of first color in the color table to use for the min contour
-Ncolors = Nlevels-1 ; number of colors to use in contouring
-
-cgLoadCT, 33, NColors=Ncolors, Bottom=firstcolor
-
-; second plot, in upper right panel
-
-;print,'zreal[128,*]= ',zreal[128,*]
-cgContour,zreal,kxmath,kymath,title = 'Real{zhat} [m]', $
-  xrange=[-kxmax,kxmax],xtitle=xlabel, $
-  yrange=[-kymax,kymax],ytitle=ylabel, $
-  levels=zhatlevels,fill=1,C_Colors=Indgen(Ncolors)+1
-  
-  ; add a color bar at the right
-barpos = [0.95, 0.55, 0.97, 0.87]
-;barpos = [0.47, 0.09, 0.49, 0.41] ; color bar position, normal coords [xll,yll,xur,yur]
-
-cgColorbar, NColors=ncolors, Bottom=firstcolor, /Discrete, /vertical, position=barpos, $ ;/Fit,
-           Range=[Min(Elevels), Max(Elevels)], OOB_High='white', OOB_Low='black',format='(f5.1)', $
-           ticknames=contnames,charsize=0.8*!p.charsize 
- 
-  
-; third plot, in lower left panel
-
-minIm = min(zimag,max=maxIm)
-print,'minIm, maxIm = ',minIm, maxIm
- 
-; ; reset plot ranges to nice values and define nice contour levels
-;minzhat = -0.12
-;maxzhat = 0.12
-
-Nlevels = 11; -(minzhat - maxzhat) + 1 ; = num of contour lines including minz and maxz
-zhatlevels = minzhat + (maxzhat - minzhat)/float(Nlevels-1)*findgen(Nlevels)  
-;print,'contour levels for zhat = ',zhatlevels 
-contnames = strarr(Nlevels)
-;for i=0,n_elements(contnames)-1 do contnames(i) = '10!u' + string(zhatlevels(i),format='(i3)') + '!n'
-for i=0,n_elements(contnames)-1 do contnames(i) = string(zhatlevels(i),format='(f6.3)')
-;print,'contnames = ',contnames
-
-; load a color table for this contour plot
-firstcolor = 1 ; index of first color in the color table to use for the min contour
-Ncolors = Nlevels-1 ; number of colors to use in contouring
-
-cgLoadCT, 33, NColors=Ncolors, Bottom=firstcolor
-   
-cgContour,zimag,kxmath,kymath,title = 'Imag{zhat} [m]', $
-  xrange=[-kxmax,kxmax],xtitle=xlabel, $
-  yrange=[-kymax,kymax],ytitle=ylabel, $
-  levels=zhatlevels,fill=1,C_Colors=Indgen(Ncolors)+1
-
-; add a color bar at the right
-barpos = [0.47, 0.09, 0.49, 0.41]
-;barpos = [0.95, 0.09, 0.97, 0.41] ; color bar position, normal coords [xll,yll,xur,yur]
-
-cgColorbar, NColors=ncolors, Bottom=firstcolor, /Discrete, /vertical, position=barpos, $ ;/Fit,
-           Range=[Min(Elevels), Max(Elevels)], OOB_High='white', OOB_Low='black',format='(f5.1)', $
-           ticknames=contnames,charsize=0.8*!p.charsize 
-            
-%}
 
 
 % ; ***** TAKE THE INVERSE FFT TO GET THE SEA SURFACE *****
@@ -640,7 +563,8 @@ zcomplx = ifft2(zhat);
 zsurf = real(zcomplx);
 figure(7)
 vzsurf=[0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6]
-surfc(linspace(0,100,64),linspace(0,100,64),zsurf/(Deltakx*Deltaky))
+ZSURF = 64*64*zsurf;
+surfc(linspace(0,100,64),linspace(0,100,64),ZSURF)
 colorbar
 zimag = imag(zcomplx);
 
