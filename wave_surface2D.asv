@@ -345,28 +345,12 @@ vpsi=[10^0, 10^-1, 10^-2, 10^-3 10^-4 10^-5 10^-6 10^-7 10^-8];
 % ;Psi1splot = Psi1s  ; for contouring the 2sided spectrum (incl neg kxmath)
 contourf(10*log10(Psi1splot))
 colorbar
-title('Spread Eckv elfouhaily')
 subplot(2,2,2)
-
 loglog(kx1S(1,1:32),Psi1splot(32,:))
 title('Spectrum along the x-axis from surface')
-xlabel('spatial frequency k [rad/m]')
-ylabel('Variance spectrum S(k) [m^2/rad/m]')
-
 subplot(2,2,3)
+title('Spectrum from imple')
 loglog(kx1S,elfouhailyD(U10,0.84,0,kx1S))
-title('Spectrum from implemented elfouhaily')
-xlabel('spatial frequency k [rad/m]')
-ylabel('Variance spectrum S(k) [m^2/rad/m]')
-
-subplot(2,2,4)
-loglog(kx1S(1,1:32),Psi1splot(32,:))
-hold on
-loglog(kx1S,elfouhailyD(U10,0.84,0,kx1S))
-title('Implementer + from surface')
-xlabel('spatial frequency k [rad/m]')
-ylabel('Variance spectrum S(k) [m^2/rad/m]')
-legend('Andreas implementation','From surfacespectrum')
 
 % surfc(1:64,1:64,real(Psi1s))
 
