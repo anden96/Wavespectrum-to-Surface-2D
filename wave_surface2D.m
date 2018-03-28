@@ -1,4 +1,3 @@
-
 % @ECKV2D_k_phi ; the one-sided, 2D ECKV spectrum with the symmetric ECKV Phi(k,phi) spreading function
 % NEED TO IMPLEMENT ECKV2D_k_phi in matlab to 
 % pro gen2Dsurf
@@ -666,11 +665,11 @@ print,'   sample avg slope angle, crosswind = ', thetay
 SurfaceSave=zeros(length(Zreal(:,1))*length(Zreal(1,:)),3);
 surlen=length(Zreal(1,:));
 
-for a=1:surlen
-    for b=1:surlen
-        
-    end
-end
+%for a=1:surlen
+%   for b=1:surlen
+%        
+%   end
+%end
     
     
 for a=1:length(Zreal(:,1))
@@ -684,3 +683,4 @@ end
 disp('Save surface')
 save('surface_elfouhaily.mat','SurfaceSave');
 save_check=load('surface_elfouhaily.mat','SurfaceSave')
+
