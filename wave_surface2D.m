@@ -675,12 +675,16 @@ end
     
 for a=1:length(Zreal(:,1))
         for c=1:length(Zreal(:,1))
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,1)=c*Deltax;
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,2)=a*Deltay;
+            SurfaceSave((a-1)*length(Zreal(:,1))+c,1)=c*Deltax-50;
+            SurfaceSave((a-1)*length(Zreal(:,1))+c,2)=a*Deltay-50;
             SurfaceSave((a-1)*length(Zreal(:,1))+c,3)=Zreal(c,b);
         end
 end
         
 disp('Save surface')
-save('surface_elfouhaily.mat','SurfaceSave');
-save_check=load('surface_elfouhaily.mat','SurfaceSave')
+% save('surface_elfouhaily.mat','SurfaceSave');
+%  save('MyMatrix.txt', 'SurfaceSave', '-ascii', '-float', ' ')
+
+% save_check=load('surface_elfouhaily.mat','SurfaceSave')
+
+ dlmwrite('myFile.txt',SurfaceSave,'delimiter',' ');
