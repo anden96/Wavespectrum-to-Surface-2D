@@ -666,25 +666,28 @@ print,'   sample avg slope angle, crosswind = ', thetay
 SurfaceSave=zeros(length(Zreal(:,1))*length(Zreal(1,:)),3);
 surlen=length(Zreal(1,:));
 
-for a=1:surlen
-    for b=1:surlen
-        
-    end
-end
     
     
 for a=1:length(Zreal(:,1))
         for c=1:length(Zreal(:,1))
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,1)=c*Deltax-50;
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,2)=a*Deltay-50;
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,3)=Zreal(c,b);
+            SurfaceSave((a-1)*length(Zreal(:,1))+c,2)=c*Deltax-50;
+            SurfaceSave((a-1)*length(Zreal(:,1))+c,1)=a*Deltay-50;
+            SurfaceSave((a-1)*length(Zreal(:,1))+c,3)=ZSURF(a,c);
         end
 end
-        
+
+for a=1:surlen
+    for b=1:surlen
+         SurfaceSave((a-1)*length(Zreal(:,1))+b,1)=a*Deltay-50;
+
+    end
+end
+
+
 disp('Save surface')
 % save('surface_elfouhaily.mat','SurfaceSave');
 %  save('MyMatrix.txt', 'SurfaceSave', '-ascii', '-float', ' ')
 
 % save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
- dlmwrite('myFile.txt',SurfaceSave,'delimiter',' ');
+ dlmwrite('myFile.txt',SurfaceSave);%,'delimiter',',');
