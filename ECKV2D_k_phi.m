@@ -28,7 +28,7 @@ g = 9.82;
 % ; Omegac = 0.84 for a "fully developed" sea (corresponds to Pierson-Moskowicz)
 % ;        = 1 for a "mature" sea (used in ECKV Fig 8a)
 % ;        = 2 to 5 for a "young" sea; max allowed value is 5
-Omegac = 0.84;
+Omegac = 2;
 
 % ;  convert U10 = wind at 10 m to the friction velocity u* using ECKV Eq. 61
 Cd10N = 0.00144; %          ; value deduced from ECKV Fig 11
