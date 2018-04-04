@@ -51,7 +51,7 @@ idbug=0; % Set to 1 for debugging output
 
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
-U10 = 15.0; % [m/s]
+U10 = 5.0; % [m/s]
 
 Nx = 64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
@@ -662,7 +662,6 @@ print,'   sample avg slope angle, crosswind = ', thetay
 % zcomplx = 0 %; now done with zcomplx array; free storage
 
 %  Save surface to .mat file
-<<<<<<< HEAD
 SurfaceSave=zeros(length(ZSURF(:,1))*length(ZSURF(1,:)),3);
 surlen=length(ZSURF(1,:));
     
@@ -674,47 +673,16 @@ for a=1:length(ZSURF(:,1))
         end
 end
 
-=======
-SurfaceSave=zeros(length(Zreal(:,1))*length(Zreal(1,:)),3);
-surlen=length(Zreal(1,:));
-
-
-%for a=1:surlen
-%   for b=1:surlen
-%        
-%   end
-%end
-    
-    
-for a=1:length(Zreal(:,1))
-        for c=1:length(Zreal(:,1))
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,2)=c*Deltax-50;
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,1)=a*Deltay-50;
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,3)=ZSURF(a,c);
-        end
-end
-
-for a=1:surlen
-    for b=1:surlen
-         SurfaceSave((a-1)*length(Zreal(:,1))+b,1)=a*Deltay-50;
-
-    end
-end
->>>>>>> 0176a1faf50ff5a11d62701a43d79413e1673aac
 
 
 disp('Save surface')
 
-% save('surface_elfouhaily.mat','SurfaceSave');
-% save_check=load('surface_elfouhaily.mat','SurfaceSave')
+save('surface_elfouhaily.mat','SurfaceSave');
+save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
 % save('surface_elfouhaily.mat','SurfaceSave');
 %  save('MyMatrix.txt', 'SurfaceSave', '-ascii', '-float', ' ')
 
 % save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
-<<<<<<< HEAD
  dlmwrite('myFile2.txt',SurfaceSave,'delimiter',' ');
-=======
- dlmwrite('Surface.txt',SurfaceSave,'delimiter',',');
->>>>>>> 0176a1faf50ff5a11d62701a43d79413e1673aac
