@@ -62,8 +62,8 @@ switch InputOption
     case 1
         labelInOpt = ' Spatial resolution is defined by the sample spacing and number of sample points';
         % smallest resolvable wavelength is 2*Deltax
-        Deltax = 0.1; %0.0025
-        Deltay = 0.1;
+        Deltax = 0.005; %0.0025
+        Deltay = 0.005;
         Lx = Deltax*Nx;
         Ly = Deltax*Ny;
     case 2
@@ -667,8 +667,8 @@ surlen=length(ZSURF(1,:));
     
 for a=1:length(ZSURF(:,1))
         for c=1:length(ZSURF(:,1))
-            SurfaceSave((a-1)*length(ZSURF(:,1))+c,2)=c*Deltax-Lx/2;
-            SurfaceSave((a-1)*length(ZSURF(:,1))+c,1)=a*Deltay-Ly/2;
+            SurfaceSave((a-1)*length(ZSURF(:,1))+c,2)=c*Deltax-25;
+            SurfaceSave((a-1)*length(ZSURF(:,1))+c,1)=a*Deltay-25;
             SurfaceSave((a-1)*length(ZSURF(:,1))+c,3)=ZSURF(c,a);
         end
 end
