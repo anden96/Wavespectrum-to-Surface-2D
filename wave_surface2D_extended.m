@@ -50,6 +50,25 @@
 idbug=0; % Set to 1 for debugging output
 
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
+
+
+%  SELECT WAVESPECTRUM AND PARAMETERS
+% Select one of the following Elfouhaily, Jonswap or Pierson-Moskowitz
+% With the following elfou, jon, pm
+spectrum='elfou';
+
+% Elfouhaily 
+% Select how developed the sea is, number between 0 and 5
+omegac=0.84;
+
+% Jonswap
+% Define the fetch
+fetch=0;
+
+% Pierson-Moskowitz - nothing to define
+
+
+
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
 U10 = 15.0; % [m/s]
 
@@ -75,15 +94,10 @@ switch InputOption
         Deltay = Ly/Ny;
 end
 
-% ; Define root names for output files.
-% ; File names will have the form root name + wind speed + x spatial size + x sampling, e.g.
-% ; PlotFileName = 'Fig3.3_U10_L100_N1024.eps'
-% ; The info on wind speed, spatial size, and sampling size will be appended below.
+% Plot to txt file 
+% Format 'surf'+spectrum+windspedd+parameter+size+sample?
 
-PlotRootName = 'Fig3.3_ECKV';
-
-% ; Optionally save a text file z2D_PlotRootName.txt of (x,y,z) values for postprocessing
-% ; These z(x,y) files can be plotted by routines cgPlot2Dsurf_3D and cgPlot2Dsurf_contour
+txtFilename='';
 % ; Note: these files can be very large for large Nx, Ny
 isave = 1; % = 1 to save output, 0 to not save
 
@@ -136,6 +150,11 @@ Nyquistx = pi/Deltax;  % Nyquist spatial freq in rad/m
 Nyquisty = pi/Deltay;  %Nyquist spatial freq in rad/m
 kxmax = Nyquistx;
 kymax = Nyquisty;
+
+
+
+
+
 
 % Print statements -NEEDS fixing from print to disp
 %{
@@ -699,4 +718,4 @@ disp('Save surface')
 
 % save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
- dlmwrite('Surface.txt',SurfaceSave,'delimiter',',');
+ dlmwrite('Surface.txt',SurfaceSave,'delimiter', ' ');
