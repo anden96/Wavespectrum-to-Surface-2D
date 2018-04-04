@@ -662,24 +662,19 @@ print,'   sample avg slope angle, crosswind = ', thetay
 % zcomplx = 0 %; now done with zcomplx array; free storage
 
 %  Save surface to .mat file
-SurfaceSave=zeros(length(Zreal(:,1))*length(Zreal(1,:)),3);
-surlen=length(Zreal(1,:));
-
-%for a=1:surlen
-%   for b=1:surlen
-%        
-%   end
-%end
+SurfaceSave=zeros(length(ZSURF(:,1))*length(ZSURF(1,:)),3);
+surlen=length(ZSURF(1,:));
     
-    
-for a=1:length(Zreal(:,1))
-        for c=1:length(Zreal(:,1))
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,1)=c*Deltax-50;
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,2)=a*Deltay-50;
-            SurfaceSave((a-1)*length(Zreal(:,1))+c,3)=Zreal(c,b);
+for a=1:length(ZSURF(:,1))
+        for c=1:length(ZSURF(:,1))
+            SurfaceSave((a-1)*length(ZSURF(:,1))+c,2)=c*Deltax-50;
+            SurfaceSave((a-1)*length(ZSURF(:,1))+c,1)=a*Deltay-50;
+            SurfaceSave((a-1)*length(ZSURF(:,1))+c,3)=ZSURF(c,a);
         end
 end
-        
+
+
+
 disp('Save surface')
 
 save('surface_elfouhaily.mat','SurfaceSave');
@@ -690,4 +685,4 @@ save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
 % save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
- dlmwrite('myFile.txt',SurfaceSave,'delimiter',' ');
+ dlmwrite('myFile2.txt',SurfaceSave,'delimiter',' ');
