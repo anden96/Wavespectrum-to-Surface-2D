@@ -1,4 +1,4 @@
-function E2D=ECKV2D_k_phi(kpos,phirad,U10)
+function E2D=ECKV2D_k_phi(kpos,phirad,U10,age)
 
 % ; Given positive angular wavenumbers kpos in rad/m and angle phi in radians, and wind speed U10 in m/s, 
 % ; this routine returns the 2D directional gravity-capillary energy spectrum Psi(k,phi) of 
@@ -28,7 +28,7 @@ g = 9.82;
 % ; Omegac = 0.84 for a "fully developed" sea (corresponds to Pierson-Moskowicz)
 % ;        = 1 for a "mature" sea (used in ECKV Fig 8a)
 % ;        = 2 to 5 for a "young" sea; max allowed value is 5
-Omegac = 0.84;
+Omegac = age;
 
 % ;  convert U10 = wind at 10 m to the friction velocity u* using ECKV Eq. 61
 Cd10N = 0.00144; %          ; value deduced from ECKV Fig 11

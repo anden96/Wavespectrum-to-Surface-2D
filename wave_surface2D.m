@@ -52,6 +52,7 @@ idbug=0; % Set to 1 for debugging output
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
 U10 = 5.0; % [m/s]
+age = 0.84; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea.
 
 Nx = 64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
@@ -307,7 +308,7 @@ for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2, exclude 0 and go to kx
 
           phirad=atan2(ky1S(iky),kx1S(ikx));
           
-          Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10); % Psi1s(kx,ky) = Psi1s(k,phi)
+          Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10,age); % Psi1s(kx,ky) = Psi1s(k,phi)
           if iky >= Ny/2+1 && iky <= Ny-1
               Psi1s(ikx+Nx/2,Ny-iky+1)=Psi1s(ikx+Nx/2,iky);
           end
@@ -685,4 +686,4 @@ save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
 % save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
- dlmwrite('myFile2.txt',SurfaceSave,'delimiter',' ');
+dlmwrite('elfou_50m_5ms.txt',SurfaceSave,'delimiter',' ');
