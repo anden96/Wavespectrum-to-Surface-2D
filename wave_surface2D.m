@@ -665,6 +665,9 @@ print,'   sample avg slope angle, crosswind = ', thetay
 %  Save surface to .mat file
 SurfaceSave=zeros(length(ZSURF(:,1))*length(ZSURF(1,:)),3);
 surlen=length(ZSURF(1,:));
+
+%Compute correlation length
+corrlength = rms(std(corrcoef(ZSURF)));
     
 for a=1:length(ZSURF(:,1))
         for c=1:length(ZSURF(:,1))
