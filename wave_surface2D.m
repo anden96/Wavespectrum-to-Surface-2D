@@ -51,10 +51,14 @@ idbug=0; % Set to 1 for debugging output
 
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
-U10 = 10.0; % [m/s]
-age = 2; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea.
-filename = 'elfou_age2_10ms.txt' %Give the output file a name that corresponds well with the parameters of the surface. At this point a 50x50m surface is taken for granted in the naming-scheme
-
+U10 = 5.0; % [m/s]
+surfage = 0.84; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea. Set responsibly.
+surftype = 'elfou'; %Denote the type of spectrum used to generate surface
+names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'})) %Concates a string denoting the parameters of the surface we're generating
+%strcat gives cell arrays so we must be sure to convert into a proper
+%string using string()
+%since we want to avoid having dots in the middle of filenames we multiply
+%surfage by 100. Debateable strategy.
 Nx = 64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
 
@@ -214,8 +218,10 @@ kyFFT = (2.0*pi/Ly)*[0.0, yFFT ,Ny/2.0, -Ny/2.0+yFFT];
 % Worth controlling if any differences with SHIFT and circshift
 % Confirmed that circshift does the same as shift, ref: Harris Geospatial
 % Solutions, IDL reference. 18-03-04
-kxmath = circshift(kxFFT,Nx/2-1);
-kymath = circshift(kyFFT,Ny/2-1);
+
+    kxmath = circshift(kxFFT,Nx/2-1);
+    kymath = circshift(kyFFT,Ny/2-1);
+
 %To plot the kymath and kxmath - Looks OK  
 % figure(2)
 %  subplot(1,2,1)
@@ -309,7 +315,7 @@ for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2, exclude 0 and go to kx
 
           phirad=atan2(ky1S(iky),kx1S(ikx));
           
-          Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10,age); % Psi1s(kx,ky) = Psi1s(k,phi)
+          Psi1s(ikx+Nx/2,iky) = ECKV2D_k_phi(k,phirad,U10,surfage); % Psi1s(kx,ky) = Psi1s(k,phi)
           if iky >= Ny/2+1 && iky <= Ny-1
               Psi1s(ikx+Nx/2,Ny-iky+1)=Psi1s(ikx+Nx/2,iky);
           end
@@ -438,9 +444,8 @@ C3 = 1/sqrt(8);
 
 Psiroot = C3*sqrt(Psi1s*Deltakx*Deltaky); 
 
-% Psi1s = 0; %; now done with Psi1s array; free storage - Better to keep it
-% for debugging purposes - Oskar
-
+Psi1s = 0; %; now done with Psi1s array; free storage - can be kept just
+% to check its values.
 
 % ;***** CAN START LOOPING HERE TO GENERATE MULTIPLE SURFACES 
 % ;      FOR THE SAME VARIANCE   SPECTRUM BUT DIFFERENT RANDOMIZATIONS.
@@ -498,12 +503,8 @@ end
     zhat(ikx,iky) = (ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(ikx,Ny+2-iky) * Psiroot(ikx,Ny+2-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(ikx,Ny+2-iky) * Psiroot(ikx,Ny+2-iky));
     zhat(ikx,Ny+2-iky) = conj( zhat(ikx,iky));
  end
-%  Temp sol for NaN in Ps1s
-%  zhat(2,3)=7*10^-6;
-%  zhat(5,3)=7*10^-6;
-%  zhat(Nx,Ny-1)=7*10^-6;
-%  zhat(Nx+2-5,Ny+2-3)=7*10^-6;
-%  ; all kx for ky = 0 and Nyquist frequency at ky index Ny/2:
+ 
+ %  ; all kx for ky = 0 and Nyquist frequency at ky index Ny/2:
  for ikx=2:Nx/2+1
    iky = Ny/2+1;
     zhat(ikx,iky) =(ranr(ikx,iky) * Psiroot(ikx,iky) + ranr(Nx+2-ikx,Ny+2-iky) * Psiroot(Nx+2-ikx,Ny+2-iky))+i*(rans(ikx,iky) * Psiroot(ikx,iky) - rans(Nx+2-ikx,Ny+2-iky) * Psiroot(Nx+2-ikx,Ny+2-iky));
@@ -587,10 +588,26 @@ zcomplx = ifft2(zhat);
 
 zsurf = real(zcomplx);
 figure(7)
-vzsurf=[0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6]
+vzsurf=[0.9 0.85 0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6 -0.75 -0.9]
 ZSURF = 64*64*zsurf;
-surfc(linspace(0,100,64),linspace(0,100,64),ZSURF)
+standev = std2(corrcoef(ZSURF));
+corrlen = rms(standev);    %Compute correlation length
+surfc(linspace(0,Lx,Nx),linspace(0,Ly,Ny),ZSURF)
+title('2D Elfouhaily surface-spectra')
+zlabel('Height (m)')
+xlabel('Position (m)')
+ylabel('Position (m)')
+corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
+corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
+stdstr = num2str(standev);
+stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
+legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
 colorbar
+
+%Saving varios parameters and results as images and textfiles
+pngFile = strcat(names, {'.png'}); %Concate a string for a specific fileformate using names earlier.
+saveas(gcf,pngFile)     %Save the surface as a .png image
+
 zimag = imag(zcomplx);
 
 % ; ----- Checks on the generated surface
@@ -651,14 +668,12 @@ end
 dzdx2 = dzdx2/(Deltax*Deltax*(Nx)*(Ny+1));
 thetax = thetax/((Nx)*(Ny+1));
 
-% zcomplx = 0 %; now done with zcomplx array; free storage
+zcomplx = 0 %; now done with zcomplx array; free storage
 
 %  Save surface to .mat file
 SurfaceSave=zeros(length(ZSURF(:,1))*length(ZSURF(1,:)),3);
 surlen=length(ZSURF(1,:));
 
-%Compute correlation length
-corrlength = rms(std(corrcoef(ZSURF)));
     
 for a=1:length(ZSURF(:,1))
         for c=1:length(ZSURF(:,1))
@@ -671,13 +686,9 @@ end
 
 
 disp('Save surface')
+matFile = strcat(names,{'.mat'}); %Concate a string for a specific fileformate using names earlier.
+save(matFile,'SurfaceSave');
+save_check=load(matFile,'SurfaceSave')
 
-save('surface_elfouhaily.mat','SurfaceSave');
-save_check=load('surface_elfouhaily.mat','SurfaceSave')
-
-% save('surface_elfouhaily.mat','SurfaceSave');
-%  save('MyMatrix.txt', 'SurfaceSave', '-ascii', '-float', ' ')
-
-% save_check=load('surface_elfouhaily.mat','SurfaceSave')
-
-dlmwrite(filename,SurfaceSave,'delimiter',' ');
+textFile = strcat(names,{'.txt'}); %Concate a string for a specific fileformate using names earlier.
+dlmwrite(textFile,SurfaceSave,'delimiter',' ');
