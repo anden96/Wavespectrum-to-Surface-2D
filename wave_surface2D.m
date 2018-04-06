@@ -51,6 +51,7 @@ idbug=0; % Set to 1 for debugging output
 
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
+
 U10 = 5.0; % [m/s]
 surfage = 0.84; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea. Set responsibly.
 surftype = 'elfou'; %Denote the type of spectrum used to generate surface
@@ -61,6 +62,13 @@ names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U
 %surfage by 100. Debateable strategy.
 Nx = 64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
+
+U10 = 15.0; % [m/s]
+age = 0.84; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea.
+filename = 'elfou_50m_15ms.txt' %Give the output file a name that corresponds well with the parameters of the surface. At this point a 50x50m surface is taken for granted in the naming-scheme
+
+Nx = 256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
+Ny = 256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
 
 InputOption=2;
 
@@ -355,21 +363,25 @@ colorbar
 title('Spread Eckv elfouhaily')
 subplot(2,2,2)
 
-loglog(kx1S(1,1:32),Psi1splot(32,:))
+% loglog(kx1S(1,1:32),Psi1splot(32,:))
+loglog(Psi1splot(32,:))
 title('Spectrum along the x-axis from surface')
 xlabel('spatial frequency k [rad/m]')
 ylabel('Variance spectrum S(k) [m^2/rad/m]')
 
 subplot(2,2,3)
-loglog(kx1S,elfouhailyD(U10,0.84,0,kx1S))
+% loglog(kx1S,elfouhailyD(U10,0.84,0,kx1S))
+% loglog(kx1S,elfouhailyD(U10,0.84,0,kx1S))
 title('Spectrum from implemented elfouhaily')
 xlabel('spatial frequency k [rad/m]')
 ylabel('Variance spectrum S(k) [m^2/rad/m]')
 
 subplot(2,2,4)
-loglog(kx1S(1,1:32),Psi1splot(32,:))
+% loglog(kx1S(1,1:32),Psi1splot(32,:))
+%  loglog(kx1S(1,1:32),Psi1splot(32,:))
+
 hold on
-loglog(kx1S,elfouhailyD(U10,0.84,0,kx1S))
+% loglog(kx1S,elfouhailyD(U10,0.84,0,kx1S))
 title('Implementer + from surface')
 xlabel('spatial frequency k [rad/m]')
 ylabel('Variance spectrum S(k) [m^2/rad/m]')
@@ -564,7 +576,8 @@ end
 
 vzplot=[0.02 0.016 0.012 0.008 0.004 0 -0.004 -0.008 -0.012 -0.016 -0.020];
 figure(5)
-contourf(linspace(-2,2,64),linspace(-2,2,64),Zreal',vzplot)
+% contourf(linspace(-2,2,64),linspace(-2,2,64),Zreal',vzplot)
+contourf(Zreal',vzplot)
 colorbar
 
 title('zhat real')
@@ -572,8 +585,8 @@ title('zhat real')
 figure(6)
 contour(Zimag')
 title('zhat real no shift')
-contourf(linspace(-2,2,64),linspace(-2,2,64),real(zhat)',vzplot)
-
+% contourf(linspace(-2,2,64),linspace(-2,2,64),real(zhat)',vzplot)
+contourf(real(zhat)',vzplot)
 
 % ; ***** TAKE THE INVERSE FFT TO GET THE SEA SURFACE *****
 disp('Frequency-shifted zhat(0,0) [should = (0,0)] ='+num2str(zhat(1,1)));
@@ -588,6 +601,7 @@ zcomplx = ifft2(zhat);
 
 zsurf = real(zcomplx);
 figure(7)
+<<<<<<< HEAD
 vzsurf=[0.9 0.85 0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6 -0.75 -0.9]
 ZSURF = 64*64*zsurf;
 standev = std2(corrcoef(ZSURF));
@@ -602,6 +616,12 @@ corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concat
 stdstr = num2str(standev);
 stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
 legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
+=======
+vzsurf=[0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6]
+ ZSURF = Nx*Ny*zsurf;
+% surfc(linspace(0,100,64),linspace(0,100,64),ZSURF)
+surfc(ZSURF)
+>>>>>>> e5efd7e97da339b3aadc6303423f63e7dbbf2630
 colorbar
 
 %Saving varios parameters and results as images and textfiles
