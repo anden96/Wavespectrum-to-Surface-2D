@@ -83,17 +83,6 @@ switch InputOption
         Deltay = Ly/Ny;
 end
 
-% ; Define root names for output files.
-% ; File names will have the form root name + wind speed + x spatial size + x sampling, e.g.
-% ; PlotFileName = 'Fig3.3_U10_L100_N1024.eps'
-% ; The info on wind speed, spatial size, and sampling size will be appended below.
-
-PlotRootName = 'Fig3.3_ECKV';
-
-% ; Optionally save a text file z2D_PlotRootName.txt of (x,y,z) values for postprocessing
-% ; These z(x,y) files can be plotted by routines cgPlot2Dsurf_3D and cgPlot2Dsurf_contour
-% ; Note: these files can be very large for large Nx, Ny
-isave = 1; % = 1 to save output, 0 to not save
 
 % Seed probably not needed for matlab
 % ; define an initial seed for random number generation
