@@ -53,7 +53,7 @@ idbug=0; % Set to 1 for debugging output
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
 U10 = 10.0; % [m/s]
 age = 2; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea.
-filename = 'elfou_age2_10ms.txt' %Give the output file a name that corresponds well with the parameters of the surface. At this point a 50x50m surface is taken for granted in the naming-scheme
+filename = 'elfou_age2_10ms.txt' %Give the output file a name that corresponds well with th
 
 Nx = 64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
