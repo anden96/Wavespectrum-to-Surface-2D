@@ -595,7 +595,7 @@ zcomplx = ifft2(zhat);
 
 zsurf = real(zcomplx);
 figure(7)
-<<<<<<< HEAD
+
 vzsurf=[0.9 0.85 0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6 -0.75 -0.9]
 ZSURF = 64*64*zsurf;
 standev = std2(corrcoef(ZSURF));
@@ -610,12 +610,12 @@ corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concat
 stdstr = num2str(standev);
 stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
 legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
-=======
-vzsurf=[0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6]
- ZSURF = Nx*Ny*zsurf;
+
+
+
 % surfc(linspace(0,100,64),linspace(0,100,64),ZSURF)
 surfc(ZSURF)
->>>>>>> e5efd7e97da339b3aadc6303423f63e7dbbf2630
+
 colorbar
 
 %Saving varios parameters and results as images and textfiles
