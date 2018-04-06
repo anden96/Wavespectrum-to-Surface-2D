@@ -601,29 +601,22 @@ ZSURF = 64*64*zsurf;
 standev = std2(corrcoef(ZSURF));
 corrlen = rms(standev);    %Compute correlation length
 surfc(linspace(0,Lx,Nx),linspace(0,Ly,Ny),ZSURF)
+colorbar
 title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
 xlabel('Position (m)')
 ylabel('Position (m)')
+legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
+
 corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
 corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
 stdstr = num2str(standev);
 stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
-legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
-
-
-
-% surfc(linspace(0,100,64),linspace(0,100,64),ZSURF)
-surfc(ZSURF)
-
-colorbar
 
 %Saving varios parameters and results as images and textfiles
 pngFile = strcat(names, {'.png'}); %Concate a string for a specific fileformate using names earlier.
 saveas(gcf,pngFile)     %Save the surface as a .png image
-
 zimag = imag(zcomplx);
-
 % ; ----- Checks on the generated surface
 disp('Checks on the generated z(x,y):')
 
