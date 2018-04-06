@@ -51,8 +51,9 @@ idbug=0; % Set to 1 for debugging output
 
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
-U10 = 5.0; % [m/s]
-age = 0.84; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea.
+U10 = 10.0; % [m/s]
+age = 2; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea.
+filename = 'elfou_age2_10ms.txt'
 
 Nx = 64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
@@ -649,16 +650,6 @@ for ix = 2:Nx
 end
 dzdx2 = dzdx2/(Deltax*Deltax*(Nx)*(Ny+1));
 thetax = thetax/((Nx)*(Ny+1));
-%{
-print,'   sample mean square slope, alongwind = ', dzdx2
-print,'   sample mean square slope, crosswind = ', dzdy2
-print,'   total sample mean square slope      = ',dzdx2 + dzdy2
-print,'   Cox-Munk mss_x = ',0.0316*U10
-print,'   Cox-Munk mss_y = ',0.0192*U10
-print,'   Cox-Munk mss   = ',0.001*(3.0 + 5.12*U10)
-print,'   sample avg slope angle, alongwind = ', thetax
-print,'   sample avg slope angle, crosswind = ', thetay
-%}
 
 % zcomplx = 0 %; now done with zcomplx array; free storage
 
@@ -689,4 +680,4 @@ save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
 % save_check=load('surface_elfouhaily.mat','SurfaceSave')
 
-dlmwrite('elfou_50m_5ms.txt',SurfaceSave,'delimiter',' ');
+dlmwrite(filename,SurfaceSave,'delimiter',' ');
