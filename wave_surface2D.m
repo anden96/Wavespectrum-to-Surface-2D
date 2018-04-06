@@ -60,12 +60,6 @@ names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U
 %string using string()
 %since we want to avoid having dots in the middle of filenames we multiply
 %surfage by 100. Debateable strategy.
-Nx = 64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
-Ny = 64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
-
-U10 = 15.0; % [m/s]
-age = 0.84; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea.
-filename = 'elfou_50m_15ms.txt' %Give the output file a name that corresponds well with the parameters of the surface. At this point a 50x50m surface is taken for granted in the naming-scheme
 
 Nx = 256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
