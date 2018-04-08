@@ -499,7 +499,7 @@ zsurf = real(zcomplx);
 figure(7)
 
 vzsurf=[0.9 0.85 0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6 -0.75 -0.9]
-ZSURF = 64*64*zsurf;
+ZSURF = Nx*Ny*zsurf;
 standev = std2(corrcoef(ZSURF));
 corrlen = rms(standev);    %Compute correlation length
 surfc(linspace(0,Lx,Nx),linspace(0,Ly,Ny),ZSURF)
