@@ -503,6 +503,7 @@ ZSURF = Nx*Ny*zsurf;
 standev = std2(corrcoef(ZSURF));
 corrlen = rms(standev);    %Compute correlation length
 surfc(linspace(0,Lx,Nx),linspace(0,Ly,Ny),ZSURF)
+zlim([-1 1])
 colorbar
 title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
