@@ -41,7 +41,8 @@
 % ;-----------------------------------------------------------------------------------------------------------
 %  Use of MATLAB standard graphics packets
 % 
-% ; Written 13 August 2014 by Curtis Mobley and modified by Andreas Divinyi
+% ; Written 13 August 2014 by Curtis Mobley and modified by Andreas
+% ; Divinyi, edit and bugfixing by Oskar Paulsson
 % 2018
 % 
 % 
