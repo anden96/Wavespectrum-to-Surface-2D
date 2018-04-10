@@ -510,7 +510,7 @@ title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
 xlabel('Position (m)')
 ylabel('Position (m)')
-legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
+% legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
 
 corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
 corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
@@ -519,7 +519,7 @@ stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
 
 %Saving varios parameters and results as images and textfiles
 pngFile = strcat(names, {'.png'}); %Concate a string for a specific fileformate using names earlier.
-saveas(gcf,pngFile)     %Save the surface as a .png image
+% saveas(gcf,pngFile)     %Save the surface as a .png image
 zimag = imag(zcomplx);
 % ; ----- Checks on the generated surface
 disp('Checks on the generated z(x,y):')
@@ -570,14 +570,15 @@ for ix = 2:Nx
 end
 dzdx2 = dzdx2/(Deltax*Deltax*(Nx)*(Ny+1));
 thetax = thetax/((Nx)*(Ny+1));
+    disp('ok')
 
 zcomplx = 0 %; now done with zcomplx array; free storage
-
 %  Save surface to .mat file
-SurfaceSave=zeros(length(ZSURF(:,1))*length(ZSURF(1,:)),3);
-surlen=length(ZSURF(1,:));
+ SurfaceSave=zeros(length(ZSURF(:,1))*length(ZSURF(1,:)),3);
+ surlen=length(ZSURF(1,:));
 
-    
+
+
 for a=1:length(ZSURF(:,1))
         for c=1:length(ZSURF(:,1))
             SurfaceSave((a-1)*length(ZSURF(:,1))+c,2)=c*Deltax-Lx/2;
@@ -587,11 +588,13 @@ for a=1:length(ZSURF(:,1))
 end
 
 
-
-disp('Save surface')
-matFile = strcat(names,{'.mat'}); %Concate a string for a specific fileformate using names earlier.
-save(matFile,'SurfaceSave');
-save_check=load(matFile,'SurfaceSave');
+ disp('Save surface')
+% matFile = strcat(names,{'.mat'}); %Concate a string for a specific fileformate using names earlier.
+% save(matFile,'SurfaceSave');
+% save_check=load(matFile,'SurfaceSave');
 
 textFile = strcat(names,{'.txt'}); %Concate a string for a specific fileformate using names earlier.
 dlmwrite(textFile,SurfaceSave,'delimiter',' ');
+x=linspace(-25,25,Nx);
+y=linspace(-25,25,Ny);
+surf2stl('test_elfou_50m_84_5ms.stl',x,y,ZSURF)
