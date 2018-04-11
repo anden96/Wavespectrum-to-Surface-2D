@@ -84,6 +84,17 @@ switch InputOption
         Deltay = Ly/Ny;
 end
 
+% ; Define root names for output files.
+% ; File names will have the form root name + wind speed + x spatial size + x sampling, e.g.
+% ; PlotFileName = 'Fig3.3_U10_L100_N1024.eps'
+% ; The info on wind speed, spatial size, and sampling size will be appended below.
+
+PlotRootName = 'Fig3.3_ECKV';
+
+% ; Optionally save a text file z2D_PlotRootName.txt of (x,y,z) values for postprocessing
+% ; These z(x,y) files can be plotted by routines cgPlot2Dsurf_3D and cgPlot2Dsurf_contour
+% ; Note: these files can be very large for large Nx, Ny
+isave = 1; % = 1 to save output, 0 to not save
 
 % Seed probably not needed for matlab
 % ; define an initial seed for random number generation
@@ -123,6 +134,8 @@ elseif Nx >= 1000
     Nstring=[Nstring(1) Nstring(2) Nstring(3) Nstring(4)];
 end
 
+PlotFileName=[PlotRootName '_U' Ustring '_L' Lstring '_N' Nstring '.eps'];
+
 % ; ***** COMPUTE THE SPATIAL FREQUENCIES *****
 kxmin = 2.0*pi/Lx; % min frequency (min spatial frequency); frequency of longest resolvable wave
 kymin = 2.0*pi/Ly;
@@ -132,6 +145,23 @@ Nyquistx = pi/Deltax;  % Nyquist spatial freq in rad/m
 Nyquisty = pi/Deltay;  %Nyquist spatial freq in rad/m
 kxmax = Nyquistx;
 kymax = Nyquisty;
+
+% Print statements -NEEDS fixing from print to disp
+%{
+print,' '
+print,' Generation of a 2D sea surface from a one-sided, 2D variance spectrum Psi1s(kx,ky) = Psi(k,psi)'
+print,' '
+print,' Note: This routine does NOT account for unresolved variance'
+print,' '
+print, format='(4x,a,2i5)',   'Numbers of spatial samples = Nx, Ny =',Nx,Ny
+print, format='(4x,a,2f7.4)', 'Sample spacings Deltax, Deltay [m] =', Deltax,Deltay
+print, format='(4x,a,2f8.1)', 'Max resolvable wavelengths = Lx, Ly [m] =',Lx,Ly
+print, format='(4x,a,2f7.4)', 'Min resolvable wavelengths = 2*Deltax, 2*Deltay [m] =', minxwave,minywave
+print, format='(4x,a,2f7.2)', 'Min resolvable frequencies kxmin, kymin [rad/m] = ',kxmin ,kymin
+print, format='(4x,a,2f7.2)', 'Max resolvable (Nyquist) frequencies kxmax, kymax [rad/m] = ',kxmax ,kymax
+print, format='(4x,a,i12)',   'Seed for random number generation =',seed
+print,' '
+%}
 
 % ; ***** NOTE ON FREQUENCY ARRAY ORDER:
 % 
@@ -216,14 +246,55 @@ subplot(1,2,2)
 plot(ky1S) 
 
 
+% ;if(idebug eq 1) then begin
+% ;  print,' kxpos  = ',kxpos
+% ;  print,' kxFFT  = ',kxFFT
+% ;  print,' kxmath = ',kxmath
+% ;  print,' kx1S   = ',kx1S
+% ;  print,' kypos  = ',kypos
+% ;  print,' kyFFT  = ',kyFFT
+% ;  print,' kymath = ',kymath 
+% ;  print,' ky1S   = ',ky1S 
+% ;endif
+ 
+
+% ; ***** SET UP THE PLOT ***** 
+% MOST OF THIS WILL PROBABLY BE HANDLED AUTOMATICALLY BY MATLAB
+% ; Set up a multipanel layout
+% ;   (Note: do NOT use /noerase with multipanel plots!) - Along the lines of hold on in matlab
+
+
+nplotcol = 2; % number of plot columns
+nplotrow = 2; % number of plot rows
+
+% !p.multi = [0,nplotcol,nplotrow] 
+% 
+% ; Set up for a vector eps output file; a high-quality png file will also be created
+% 
+% !x.margin = [5,7]
+% !y.margin = [4,3]
+% !x.Omargin = [2,2]
+% !y.Omargin = [1,3]
+% 
+% aspectratio = 1.0
+% xsize= 6.5
+% ysize=xsize*aspectratio
+% charsize = 1.0
+% !p.charsize = charsize
+% 
+% PS_Start,filename=PlotFileName, /encapsulated, font=1, tt_font='Helvetica', $
+%          charsize=charsize, default_thickness=2, /nomatch, xsize=xsize, ysize=ysize
+%  
+% ; pick color tables below, since may want different colors or ranges for different contour plots 
+% 
 % ; ***** COMPUTE THE 1-SIDED, 2D VARIANCE SPECTRUM Psi1S(kx1S,ky1S) ***** 
 
 % ; Use the 1-sided, 2D variance spectrum using Psi(k,phi) of Elfouhaly et al Eq. (67) and 
 % ; Psi(kx,ky) = k Psi(k,phi).  Psi1s is needed only for "downwind" to "crosswind" directions.
 
-
-
-
+% print,' '
+% print,format='(4x,a,f5.1)', 'The 2D variance spectrum is Elfouhaily et al. with U10 =',U10 
+% print,' '
 % ;----- Compute the 1-sided variance spectrum Psi1s(kx,ky) for all kx,ky values. 
 % 
 % ; The variance spectrum is computed only for "downwind" directions (kx1S,ky1S).  
@@ -243,7 +314,7 @@ Psi1s=zeros(Nx,Ny);%holds all kxmath and kymath frequencies
 for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2, exclude 0 and go to kx1S(33)?
     for iky = Ny/2:Ny %non-negative ky values Ny/2 - Ny
 
-          k = sqrt(kx1S(ikx).^2 + ky1S(iky).^2);
+          k = sqrt(kx1S(ikx).^2 + ky1S(iky).^2)
 
           phirad=atan2(ky1S(iky),kx1S(ikx));
           
@@ -265,8 +336,14 @@ Psi1s(Nx/2,Ny/2) = 0.0;
 
 
 %; Psi1s now has all frequencies in math order
-
-
+% ;print,' '
+% ;print,' Psi1s(kxmath,kymath); (0,0) at center;  Psi1s(-kvec) = Psi1s(+kvec)'
+% ;print,format='(a8,11x,16i12)',' ikx =',indgen(Nx)
+% ;print,format='(a8,9x,16f12.3)',' kx =',kxmath
+% ;for iky=Ny-1,0,-1 do begin
+% ;    print,format='(a8,i5,f9.3,16e12.2)',' iky, ky =',iky,kymath(iky),Psi1s(*,iky)
+% ;endfor
+% 
 % ; ***** CONTOUR THE ONE-SIDED, 2D VARIANCE SPECTRUM; UPPER LEFT PANEL *****  
 % 
 Psi1splot = Psi1s(Nx/2+1:Nx,:)'; %; temp array for plotting the right half of the symmetrical variance spectrum
@@ -471,6 +548,27 @@ Zreal = circshift( real(zhat), [Nx/2, Ny/2]);
 Zimag = circshift( imag(zhat), [Nx/2, Ny/2]);
 idebug = 0;
 
+if idebug == 1 
+%{
+print,' '
+print,' Real{zhat}(kxmath,kymath); (0,0) at center;  Real{zhat(-k)} = Real{zhat(k)}'
+print,format='(a8,11x,16i12)',' ikx =',indgen(Nx)
+print,format='(a8,9x,16f12.3)',' kx =',kxmath
+for iky=Ny,1
+    print,format='(a8,i5,f9.3,16e12.2)',' iky, ky =',iky,kymath(iky),zreal(*,iky)
+end
+
+print,' '
+print,' Imag{zhat}(kxmath,kymath); (0,0) at center;  Imag{zhat(-k)} = -Imag{zhat(k)}'
+print,format='(a8,11x,16i12)',' ikx =',indgen(Nx)
+print,format='(a8,9x,16f12.3)',' kx =',kxmath
+for iky=Ny-1,0,-1 do begin
+    print,format='(a8,i5,f9.3,16e12.2)',' iky, ky =',iky,kymath(iky),zimag(*,iky)
+endfor
+
+%}
+end
+
 vzplot=[0.02 0.016 0.012 0.008 0.004 0 -0.004 -0.008 -0.012 -0.016 -0.020];
 figure(5)
 % contourf(linspace(-2,2,64),linspace(-2,2,64),Zreal',vzplot)
@@ -500,11 +598,10 @@ zsurf = real(zcomplx);
 figure(7)
 
 vzsurf=[0.9 0.85 0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6 -0.75 -0.9]
-ZSURF = Nx*Ny*zsurf;
+ZSURF = 64*64*zsurf;
 standev = std2(corrcoef(ZSURF));
 corrlen = rms(standev);    %Compute correlation length
 surfc(linspace(0,Lx,Nx),linspace(0,Ly,Ny),ZSURF)
-zlim([-1 1])
 colorbar
 title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
@@ -553,6 +650,14 @@ end
  zavg = sumz/(Nx*Ny);
 
 %  ; FIX THIS--BAD VALUES
+% disp('   avg z(x,y) (should = 0) = '+num2str(zavg));
+% disp('   max |Imag{zcomplx}| (should = 0) ='+num2str(max(abs(imag(zcomplx)))));
+% 
+% disp('Parsevals identity:')
+% disp('                            sum z^2 ='+num2str(sumzsq));
+% disp('   Nx * Nx * sum zhat^2 (one-sided) ='+num2str(Nx*(Ny)*sumzhatsq));
+% disp('   Nx * Nx * sum zhat^2 (two-sided) ='+num2str((Nx)*(Ny)*sumzhat2));
+
 
 % ; the significant wave height from avg of z^2
 avgzsq = sumzsq/((Nx)*(Ny));
@@ -591,7 +696,7 @@ end
 disp('Save surface')
 matFile = strcat(names,{'.mat'}); %Concate a string for a specific fileformate using names earlier.
 save(matFile,'SurfaceSave');
-save_check=load(matFile,'SurfaceSave');
+save_check=load(matFile,'SurfaceSave')
 
 textFile = strcat(names,{'.txt'}); %Concate a string for a specific fileformate using names earlier.
 dlmwrite(textFile,SurfaceSave,'delimiter',' ');
