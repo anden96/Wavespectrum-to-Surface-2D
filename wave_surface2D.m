@@ -54,16 +54,33 @@ idbug=0; % Set to 1 for debugging output
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
 
 U10 = 5.0; % [m/s]
-surfage = 0.84; % goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea. Set responsibly.
+
+Nx = 256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
+Ny = 256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
+
+
+
+% SPECIFY SPECTRUM
+% Models for wind spectrum currently supporter Efouhaily elfou
+% To be implemented Jonswap and Pierson-Moskowitz
 surftype = 'elfou'; %Denote the type of spectrum used to generate surface
-names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'})) %Concates a string denoting the parameters of the surface we're generating
+
+% Elfouhaily parameters
+% goes from 0.84 to 5 where 5 is young sea and 0.84 is a fully developed sea. Set responsibly
+surfage = 0.84; 
+
+% Jonswap parameters
+
+% Pierson-Moskowitz parameters
+
+% NAME GENERATION
+%Concates a string denoting the parameters of the surface we're generating
+names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'},{'_'}, num2str(Lx), {'m'}))
 %strcat gives cell arrays so we must be sure to convert into a proper
 %string using string()
 %since we want to avoid having dots in the middle of filenames we multiply
 %surfage by 100. Debateable strategy.
 
-Nx = 256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
-Ny = 256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
 
 InputOption=2;
 
@@ -78,8 +95,8 @@ switch InputOption
     case 2
           labelInOpt = ' Spatial resolution is defined by the spatial region and number of sample points';
         % largest resolvable wave is the length of the spatial region
-        Lx = 50.0; %length of surface region in the x direction, in meters 
-        Ly = 50.0; %length of surface region in the y direction, in meters 
+        Lx = 75.0; %length of surface region in the x direction, in meters 
+        Ly = 75.0; %length of surface region in the y direction, in meters 
         Deltax = Lx/Nx;
         Deltay = Ly/Ny;
 end
@@ -600,14 +617,14 @@ figure(7)
 vzsurf=[0.9 0.85 0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6 -0.75 -0.9]
 ZSURF = Ny*Nx*zsurf;
 standev = std2(ZSURF);
-corrlen = corr(ZSURF);    %Compute correlation length, 
+%corrlen = corr(ZSURF);    %Compute correlation length, 
 surfc(linspace(0,Lx,Nx),linspace(0,Ly,Ny),ZSURF)
 colorbar
 title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
 xlabel('Position (m)')
 ylabel('Position (m)')
-% legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
+legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
 
 corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
 corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
@@ -616,7 +633,7 @@ stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
 
 %Saving varios parameters and results as images and textfiles
 pngFile = strcat(names, {'.png'}); %Concate a string for a specific fileformate using names earlier.
-% saveas(gcf,pngFile)     %Save the surface as a .png image
+saveas(gcf,char(pngFile))     %Save the surface as a .png image
 zimag = imag(zcomplx);
 % ; ----- Checks on the generated surface
 disp('Checks on the generated z(x,y):')
@@ -704,4 +721,4 @@ textFile = strcat(names,{'.txt'}); %Concate a string for a specific fileformate 
 dlmwrite(textFile,SurfaceSave,'delimiter',' ');
 x=linspace(-25,25,Nx);
 y=linspace(-25,25,Ny);
-surf2stl('test_elfou_50m_84_5ms.stl',x,y,ZSURF)
+surf2stl(char(names+".stl"),x,y,ZSURF)
