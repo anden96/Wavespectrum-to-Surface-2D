@@ -53,10 +53,10 @@ idbug=0; % Set to 1 for debugging output
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
 
-U10 = 5.0; % [m/s]
+U10 = 15.0; % [m/s]
 
-Nx = 256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
-Ny = 256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
+Nx = 512; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
+Ny = 512; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
 
 
 
@@ -73,13 +73,7 @@ surfage = 0.84;
 
 % Pierson-Moskowitz parameters
 
-% NAME GENERATION
-%Concates a string denoting the parameters of the surface we're generating
-names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'},{'_'}, num2str(Lx), {'m'}))
-%strcat gives cell arrays so we must be sure to convert into a proper
-%string using string()
-%since we want to avoid having dots in the middle of filenames we multiply
-%surfage by 100. Debateable strategy.
+
 
 
 InputOption=2;
@@ -95,8 +89,8 @@ switch InputOption
     case 2
           labelInOpt = ' Spatial resolution is defined by the spatial region and number of sample points';
         % largest resolvable wave is the length of the spatial region
-        Lx = 75.0; %length of surface region in the x direction, in meters 
-        Ly = 75.0; %length of surface region in the y direction, in meters 
+        Lx = 100.0; %length of surface region in the x direction, in meters 
+        Ly = 100.0; %length of surface region in the y direction, in meters 
         Deltax = Lx/Nx;
         Deltay = Ly/Ny;
 end
@@ -112,6 +106,15 @@ PlotRootName = 'Fig3.3_ECKV';
 % ; These z(x,y) files can be plotted by routines cgPlot2Dsurf_3D and cgPlot2Dsurf_contour
 % ; Note: these files can be very large for large Nx, Ny
 isave = 1; % = 1 to save output, 0 to not save
+
+% NAME GENERATION
+%Concates a string denoting the parameters of the surface we're generating
+names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'},{'_'}, num2str(Lx), {'m'}))
+%strcat gives cell arrays so we must be sure to convert into a proper
+%string using string()
+%since we want to avoid having dots in the middle of filenames we multiply
+%surfage by 100. Debateable strategy.
+
 
 % Seed probably not needed for matlab
 % ; define an initial seed for random number generation
@@ -624,10 +627,10 @@ title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
 xlabel('Position (m)')
 ylabel('Position (m)')
-legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
+%legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
 
-corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
-corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
+% corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
+% corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
 stdstr = num2str(standev);
 stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
 
@@ -719,6 +722,6 @@ save_check=load(matFile,'SurfaceSave')
 
 textFile = strcat(names,{'.txt'}); %Concate a string for a specific fileformate using names earlier.
 dlmwrite(textFile,SurfaceSave,'delimiter',' ');
-x=linspace(-25,25,Nx);
-y=linspace(-25,25,Ny);
+x=linspace(-Lx/2,Lx/2,Nx);
+y=linspace(-Ly/2,Ly/2,Ny);
 surf2stl(char(names+".stl"),x,y,ZSURF)
