@@ -55,8 +55,8 @@ idbug=0; % Set to 1 for debugging output
 
 U10 = 5.0; % [m/s]
 
-Nx = 256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
-Ny = 256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
+Nx = 8192; %256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
+Ny = 8192; %256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
 
 
 
@@ -75,7 +75,6 @@ surfage = 0.84;
 
 % NAME GENERATION
 %Concates a string denoting the parameters of the surface we're generating
-names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'},{'_'}, num2str(Lx), {'m'}))
 %strcat gives cell arrays so we must be sure to convert into a proper
 %string using string()
 %since we want to avoid having dots in the middle of filenames we multiply
@@ -95,8 +94,8 @@ switch InputOption
     case 2
           labelInOpt = ' Spatial resolution is defined by the spatial region and number of sample points';
         % largest resolvable wave is the length of the spatial region
-        Lx = 75.0; %length of surface region in the x direction, in meters 
-        Ly = 75.0; %length of surface region in the y direction, in meters 
+        Lx = 50.0; %length of surface region in the x direction, in meters 
+        Ly = 50.0; %length of surface region in the y direction, in meters 
         Deltax = Lx/Nx;
         Deltay = Ly/Ny;
 end
@@ -107,13 +106,14 @@ end
 % ; The info on wind speed, spatial size, and sampling size will be appended below.
 
 PlotRootName = 'Fig3.3_ECKV';
+names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'},{'_'}, num2str(Lx), {'m'},{'_'}, num2str(Nx),{'samp'}))
 
 % ; Optionally save a text file z2D_PlotRootName.txt of (x,y,z) values for postprocessing
 % ; These z(x,y) files can be plotted by routines cgPlot2Dsurf_3D and cgPlot2Dsurf_contour
 % ; Note: these files can be very large for large Nx, Ny
 isave = 1; % = 1 to save output, 0 to not save
 
-% Seed probably not needed for matlab
+%Seed probably not needed for matlab
 % ; define an initial seed for random number generation
 % seed =  833202L; 538832L ;33202L; 838392L ;33202L;
 % ; Note: seed = 833202L was used on a 32 bit computer to generate Tutorial Fig. 3.3.
@@ -160,8 +160,8 @@ minxwave = 2.0*Deltax; % min resolvable wavelength (2 point wave)
 minywave = 2.0*Deltay; % min resolvable wavelength (2 point wave)
 Nyquistx = pi/Deltax;  % Nyquist spatial freq in rad/m
 Nyquisty = pi/Deltay;  %Nyquist spatial freq in rad/m
-kxmax = Nyquistx;
-kymax = Nyquisty;
+kxmax = Nyquistx
+kymax = Nyquisty
 
 % Print statements -NEEDS fixing from print to disp
 %{
@@ -331,7 +331,7 @@ Psi1s=zeros(Nx,Ny);%holds all kxmath and kymath frequencies
 for ikx=1:Nx/2 % loop over non-neg kx values kx1S 1-Nx/2, exclude 0 and go to kx1S(33)?
     for iky = Ny/2:Ny %non-negative ky values Ny/2 - Ny
 
-          k = sqrt(kx1S(ikx).^2 + ky1S(iky).^2)
+          k = sqrt(kx1S(ikx).^2 + ky1S(iky).^2);
 
           phirad=atan2(ky1S(iky),kx1S(ikx));
           
@@ -617,6 +617,7 @@ figure(7)
 vzsurf=[0.9 0.85 0.6 0.45 0.3 0.15 0 -0.15 -0.3 -0.45 -0.6 -0.75 -0.9]
 ZSURF = Ny*Nx*zsurf;
 standev = std2(ZSURF);
+stdstr = num2str(standev);
 %corrlen = corr(ZSURF);    %Compute correlation length, 
 surfc(linspace(0,Lx,Nx),linspace(0,Ly,Ny),ZSURF)
 colorbar
@@ -624,12 +625,11 @@ title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
 xlabel('Position (m)')
 ylabel('Position (m)')
-legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
+stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr));
+legend(stdstr,'Location','northeast','Orientation','vertical') %Specify legend to show correlationlength
 
-corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
-corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
-stdstr = num2str(standev);
-stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
+%corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
+%corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
 
 %Saving varios parameters and results as images and textfiles
 pngFile = strcat(names, {'.png'}); %Concate a string for a specific fileformate using names earlier.
@@ -721,4 +721,4 @@ textFile = strcat(names,{'.txt'}); %Concate a string for a specific fileformate 
 dlmwrite(textFile,SurfaceSave,'delimiter',' ');
 x=linspace(-25,25,Nx);
 y=linspace(-25,25,Ny);
-surf2stl(char(names+".stl"),x,y,ZSURF)
+%surf2stl(char(names + ".stl"),x,y,ZSURF)
