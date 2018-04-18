@@ -53,10 +53,15 @@ idbug=0; % Set to 1 for debugging output
 % ; ***** DEFINE THE PHYSICAL REGION AND SAMPLING ***** 
 % ; define the wind speed at 10 m above MSL for use in the variance spectrum
 
-U10 = 5.0; % [m/s]
+U10 = 15.0; % [m/s]
 
+<<<<<<< HEAD
 Nx = 8192; %256; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
 Ny = 8192; %256; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
+=======
+Nx = 512; %64; % number of samples of sea surface elevation to be generated in the x direction; MUST be a power of 2 for the FFT
+Ny = 512; %64; % number of samples of sea surface elevation to be generated in the y direction; MUST be a power of 2 for the FFT
+>>>>>>> d8a758a99981c1bcf06ac63d40755c9ac6baf27b
 
 
 
@@ -73,12 +78,16 @@ surfage = 0.84;
 
 % Pierson-Moskowitz parameters
 
+<<<<<<< HEAD
 % NAME GENERATION
 %Concates a string denoting the parameters of the surface we're generating
 %strcat gives cell arrays so we must be sure to convert into a proper
 %string using string()
 %since we want to avoid having dots in the middle of filenames we multiply
 %surfage by 100. Debateable strategy.
+=======
+
+>>>>>>> d8a758a99981c1bcf06ac63d40755c9ac6baf27b
 
 
 InputOption=2;
@@ -94,8 +103,13 @@ switch InputOption
     case 2
           labelInOpt = ' Spatial resolution is defined by the spatial region and number of sample points';
         % largest resolvable wave is the length of the spatial region
+<<<<<<< HEAD
         Lx = 50.0; %length of surface region in the x direction, in meters 
         Ly = 50.0; %length of surface region in the y direction, in meters 
+=======
+        Lx = 100.0; %length of surface region in the x direction, in meters 
+        Ly = 100.0; %length of surface region in the y direction, in meters 
+>>>>>>> d8a758a99981c1bcf06ac63d40755c9ac6baf27b
         Deltax = Lx/Nx;
         Deltay = Ly/Ny;
 end
@@ -113,7 +127,20 @@ names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U
 % ; Note: these files can be very large for large Nx, Ny
 isave = 1; % = 1 to save output, 0 to not save
 
+<<<<<<< HEAD
 %Seed probably not needed for matlab
+=======
+% NAME GENERATION
+%Concates a string denoting the parameters of the surface we're generating
+names = string(strcat(surftype, {'_age'}, num2str(surfage*100), {'_'}, num2str(U10), {'ms'},{'_'}, num2str(Lx), {'m'}))
+%strcat gives cell arrays so we must be sure to convert into a proper
+%string using string()
+%since we want to avoid having dots in the middle of filenames we multiply
+%surfage by 100. Debateable strategy.
+
+
+% Seed probably not needed for matlab
+>>>>>>> d8a758a99981c1bcf06ac63d40755c9ac6baf27b
 % ; define an initial seed for random number generation
 % seed =  833202L; 538832L ;33202L; 838392L ;33202L;
 % ; Note: seed = 833202L was used on a 32 bit computer to generate Tutorial Fig. 3.3.
@@ -625,11 +652,20 @@ title('2D Elfouhaily surface-spectra')
 zlabel('Height (m)')
 xlabel('Position (m)')
 ylabel('Position (m)')
+<<<<<<< HEAD
 stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr));
 legend(stdstr,'Location','northeast','Orientation','vertical') %Specify legend to show correlationlength
 
 %corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
 %corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
+=======
+%legend(corrlenstr,stdstr,'Location','northeast','Orientation','vertical','Interpereter','latex','HandleVisibility','off') %Specify legend to show correlationlength
+
+% corrlenstr = num2str(corrlen);  %Convert corrlen to string for legend entry
+% corrlenstr = string(strcat({'Correlation length, \xi = '}, corrlenstr)); %Concatenate legend entry
+stdstr = num2str(standev);
+stdstr = string(strcat({'Standard deviation, \sigma = '}, stdstr))
+>>>>>>> d8a758a99981c1bcf06ac63d40755c9ac6baf27b
 
 %Saving varios parameters and results as images and textfiles
 pngFile = strcat(names, {'.png'}); %Concate a string for a specific fileformate using names earlier.
@@ -712,13 +748,13 @@ matFile = strcat(names,{'.mat'}); %Concate a string for a specific fileformate u
 save(matFile,'SurfaceSave');
 save_check=load(matFile,'SurfaceSave')
 
- disp('Save surface')
+disp('Save surface')
 % matFile = strcat(names,{'.mat'}); %Concate a string for a specific fileformate using names earlier.
 % save(matFile,'SurfaceSave');
 % save_check=load(matFile,'SurfaceSave');
 
 textFile = strcat(names,{'.txt'}); %Concate a string for a specific fileformate using names earlier.
 dlmwrite(textFile,SurfaceSave,'delimiter',' ');
-x=linspace(-25,25,Nx);
-y=linspace(-25,25,Ny);
-%surf2stl(char(names + ".stl"),x,y,ZSURF)
+x=linspace(-Lx/2,Lx/2,Nx);
+y=linspace(-Ly/2,Ly/2,Ny);
+surf2stl(char(names+".stl"),x,y,ZSURF)
